@@ -10,8 +10,10 @@
   max-height: 300px;
   display: flex;
   flex-direction: column;
-  z-index: 100;
-  -webkit-app-region: no-drag; /* ドラッグ不可にする */
+  z-index: 1001; /* 100から1001に変更: マスコットより前面に表示 */
+  /* -webkit-app-region: no-drag; */ /* 削除 */
+  user-select: text; /* テキスト選択を有効化 */
+  -webkit-user-select: text; /* テキスト選択を有効化 (Webkit) */
 }
 
 .chat-bubble::after {
@@ -52,7 +54,8 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
-  -webkit-app-region: no-drag;
+  /* -webkit-app-region: no-drag; */ /* 削除 */
+  cursor: text; /* 追加: テキスト入力カーソルを表示 */
 }
 
 .send-button {
@@ -64,7 +67,9 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  -webkit-app-region: no-drag;
+  /* -webkit-app-region: no-drag; */ /* 削除 */
+  user-select: none; /* 追加: テキスト選択を無効化 */
+  -webkit-user-select: none; /* 追加: テキスト選択を無効化 (Webkit) */
 }
 
 .send-button:hover {

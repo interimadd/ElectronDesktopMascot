@@ -4,21 +4,43 @@
  */
 const { contextBridge, ipcRenderer } = require('electron');
 
+// デバッグ用のログ
+console.log('Preload script is running');
+
 // レンダラープロセスで使用するAPIを定義
 contextBridge.exposeInMainWorld('electronAPI', {
   // ChatGPT APIにメッセージを送信
-  sendMessage: (message) => ipcRenderer.invoke('send-message', message),
+  sendMessage: (message) => {
+    console.log('Sending message:', message);
+    return ipcRenderer.invoke('send-message', message);
+  },
   
   // 設定を保存
-  saveSettings: (settings) => ipcRenderer.invoke('save-settings', settings),
+  saveSettings: (settings) => {
+    console.log('Saving settings:', settings);
+    return ipcRenderer.invoke('save-settings', settings);
+  },
   
   // 設定を取得
-  getSettings: () => ipcRenderer.invoke('get-settings'),
+  getSettings: () => {
+    console.log('Getting settings');
+    return ipcRenderer.invoke('get-settings');
+  },
   
   // ウィンドウのドラッグ
-  startDrag: () => ipcRenderer.send('mascot-drag-start'),
+  startDrag: () => {
+    console.log('Starting drag');
+    ipcRenderer.send('mascot-drag-start');
+  },
   
   // ウィンドウの位置を保存
-  saveMascotPosition: (x, y) => 
-    ipcRenderer.invoke('save-mascot-position', x, y)
+  saveMascotPosition: (x, y) => {
+    console.log('Saving mascot position:', x, y);
+    return ipcRenderer.invoke('save-mascot-position', x, y);
+  }
+});
+
+// グローバルオブジェクトに直接追加（デバッグ用）
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM fully loaded and parsed');
 });

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <title>設定 - Electron Mascot</title>
   <style>
     body {
@@ -90,6 +91,32 @@
     
     <button id="save-button">保存</button>
   </div>
+
+  <!-- デバッグ用のステータス表示 -->
+  <div id="debug-status" style="position: fixed; bottom: 5px; left: 5px; font-size: 10px; color: #999;"></div>
+
+  <script>
+    // デバッグ用のステータス表示
+    function updateDebugStatus(message) {
+      const debugStatus = document.getElementById('debug-status');
+      if (debugStatus) {
+        const timestamp = new Date().toISOString().substr(11, 8);
+        debugStatus.textContent = `[${timestamp}] ${message}`;
+      }
+    }
+    
+    updateDebugStatus('Page loaded');
+    
+    // electronAPIが利用可能かチェック
+    window.addEventListener('DOMContentLoaded', () => {
+      updateDebugStatus('DOM loaded');
+      if (window.electronAPI) {
+        updateDebugStatus('electronAPI is available');
+      } else {
+        updateDebugStatus('electronAPI is NOT available');
+      }
+    });
+  </script>
 
   <script src="../renderer/settings.js"></script>
 </body>
