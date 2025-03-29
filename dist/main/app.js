@@ -172,6 +172,18 @@ class App {
                 return { error: 'Failed to save mascot position' };
             }
         });
+        // 設定画面を開く
+        electron_1.ipcMain.handle('open-settings', () => {
+            try {
+                logger_1.logger.info('Opening settings window');
+                this.createSettingsWindow();
+                return { success: true };
+            }
+            catch (error) {
+                logger_1.logger.error('Error opening settings window:', error);
+                return { error: 'Failed to open settings window' };
+            }
+        });
     }
     /**
      * マスコットの表示

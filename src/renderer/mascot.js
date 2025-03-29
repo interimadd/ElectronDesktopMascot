@@ -32,6 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleChatBubble();
     e.stopPropagation(); // イベントの伝播を停止
   });
+  
+  // マスコットの右クリックイベント（コンテキストメニュー）
+  mascotElement.addEventListener('contextmenu', (e) => {
+    console.log('Mascot right-clicked!');
+    e.preventDefault(); // デフォルトのコンテキストメニューを表示しない
+    
+    // 設定画面を開く
+    window.electronAPI.openSettings();
+    
+    e.stopPropagation(); // イベントの伝播を停止
+  });
 
   // チャット送信ボタンのクリックイベント
   sendButton.addEventListener('click', (e) => {

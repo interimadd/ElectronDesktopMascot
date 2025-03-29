@@ -37,6 +37,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveMascotPosition: (x, y) => {
     console.log('Saving mascot position:', x, y);
     return ipcRenderer.invoke('save-mascot-position', x, y);
+  },
+  
+  // 設定画面を開く
+  openSettings: () => {
+    console.log('Opening settings window');
+    return ipcRenderer.invoke('open-settings');
   }
 });
 
