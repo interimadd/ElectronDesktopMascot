@@ -1,0 +1,12 @@
+/**
+ * レンダラープロセスで使用するグローバル型定義
+ */
+
+interface Window {
+  electronAPI: {
+    sendMessage: (message: string) => Promise<any>;
+    saveSettings: (settings: any) => Promise<any>;
+    getSettings: () => Promise<any>;
+    saveMascotPosition: (x: number, y: number) => Promise<any>;
+  };
+}

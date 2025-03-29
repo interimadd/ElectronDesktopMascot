@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>トレイアイコン生成</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    p {
+      margin-top: 20px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>トレイアイコン生成</h1>
+  <canvas id="iconCanvas" width="256" height="256"></canvas>
+  <button id="downloadBtn">アイコンをダウンロード</button>
+  <p>ダウンロードしたアイコンを「tray-icon.png」という名前で保存してください。</p>
+
+  <script>
+    // キャンバスとコンテキストの取得
+    const canvas = document.getElementById('iconCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 猫のアイコンを描画
+    function drawCatIcon() {
+      // 背景を透明にする
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 円形の背景
+      ctx.beginPath();
+      ctx.arc(128, 128, 120, 0, Math.PI * 2);
+      ctx.fillStyle = '#1b1b1b';
+      ctx.fill();
+
+      // 顔
+      ctx.beginPath();
+      ctx.arc(128, 128, 100, 0, Math.PI * 2);
+      ctx.fillStyle = '#1b1b1b';
+      ctx.fill();
+      ctx.strokeStyle = '#979797';
+      ctx.lineWidth = 8;
+      ctx.stroke();
+
+      // 左耳
+      ctx.beginPath();
+      ctx.moveTo(80, 90);
+      ctx.lineTo(60, 40);
+      ctx.lineTo(100, 70);
+      ctx.closePath();
+      ctx.fillStyle = '#979797';
+      ctx.fill();
+
+      // 右耳
+      ctx.beginPath();
+      ctx.moveTo(176, 90);
+      ctx.lineTo(196, 40);
+      ctx.lineTo(156, 70);
+      ctx.closePath();
+      ctx.fillStyle = '#979797';
+      ctx.fill();
+
+      // 左目
+      ctx.beginPath();
+      ctx.arc(100, 110, 15, 0, Math.PI * 2);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+
+      // 左目の瞳
+      ctx.beginPath();
+      ctx.arc(100, 110, 7, 0, Math.PI * 2);
+      ctx.fillStyle = 'black';
+      ctx.fill();
+
+      // 右目
+      ctx.beginPath();
+      ctx.arc(156, 110, 15, 0, Math.PI * 2);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+
+      // 右目の瞳
+      ctx.beginPath();
+      ctx.arc(156, 110, 7, 0, Math.PI * 2);
+      ctx.fillStyle = 'black';
+      ctx.fill();
+
+      // 鼻
+      ctx.beginPath();
+      ctx.arc(128, 140, 12, 0, Math.PI * 2);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+    }
+
+    // アイコンを描画
+    drawCatIcon();
+
+    // ダウンロードボタンのイベントリスナー
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+      // キャンバスの内容をデータURLに変換
+      const dataURL = canvas.toDataURL('image/png');
+      
+      // ダウンロードリンクを作成
+      const downloadLink = document.createElement('a');
+      downloadLink.href = dataURL;
+      downloadLink.download = 'tray-icon.png';
+      
+      // リンクをクリックしてダウンロードを開始
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    });
+  </script>
+</body>
+</html>
