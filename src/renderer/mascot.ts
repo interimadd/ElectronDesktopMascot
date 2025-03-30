@@ -14,7 +14,16 @@ let isBubbleVisible = false;
 
 // マスコットのクリックイベント
 mascotElement.addEventListener('click', () => {
+  console.log('mascot clicked');
   toggleChatBubble();
+});
+
+// マスコットの右クリックイベント
+mascotElement.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+
+  // 設定画面を開く
+  window.electronAPI.openSettings();
 });
 
 // チャット送信ボタンのクリックイベント
