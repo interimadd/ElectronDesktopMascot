@@ -146,25 +146,6 @@ export class App {
       }
     });
 
-    // マスコットのドラッグ開始
-    ipcMain.on('mascot-drag-start', () => {
-      if (this.mascotWindow) {
-        this.mascotWindow.setIgnoreMouseEvents(false);
-      }
-    });
-
-    // マスコットの位置を保存
-    ipcMain.handle('save-mascot-position', (_event, x: number, y: number) => {
-      try {
-        this.configManager.saveMascotPosition(x, y);
-        logger.info(`Saved mascot position: x=${x}, y=${y}`);
-        return { success: true };
-      } catch (error) {
-        logger.error('Error saving mascot position:', error);
-        return { error: 'Failed to save mascot position' };
-      }
-    });
-    
     // 設定画面を開く
     ipcMain.handle('open-settings', () => {
       try {

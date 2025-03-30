@@ -47,9 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ドラッグ機能の実装
-  setupDragFunctionality();
-
   // 初期化
   init();
 });
@@ -114,44 +111,6 @@ function addMessage(text: string, sender: 'user' | 'mascot'): void {
   
   // 自動スクロール
   chatContent.scrollTop = chatContent.scrollHeight;
-}
-
-/**
- * ドラッグ機能をセットアップする
- */
-function setupDragFunctionality(): void {
-  let isDragging = false;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  mascotElement.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    offsetX = e.clientX - mascotElement.getBoundingClientRect().left;
-    offsetY = e.clientY - mascotElement.getBoundingClientRect().top;
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    
-    const x = e.clientX - offsetX;
-    const y = e.clientY - offsetY;
-    
-    mascotElement.style.position = 'absolute';
-    mascotElement.style.left = `${x}px`;
-    mascotElement.style.top = `${y}px`;
-  });
-
-  document.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      
-      // 位置を保存
-      const x = parseInt(mascotElement.style.left || '0', 10);
-      const y = parseInt(mascotElement.style.top || '0', 10);
-      
-      window.electronAPI.saveMascotPosition(x, y);
-    }
-  });
 }
 
 /**

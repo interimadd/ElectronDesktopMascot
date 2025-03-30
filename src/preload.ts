@@ -15,13 +15,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 設定を取得
   getSettings: () => ipcRenderer.invoke('get-settings'),
   
-  // ウィンドウのドラッグ
-  startDrag: () => ipcRenderer.send('mascot-drag-start'),
-  
-  // ウィンドウの位置を保存
-  saveMascotPosition: (x: number, y: number) => 
-    ipcRenderer.invoke('save-mascot-position', x, y),
-
   // 設定画面を開く
   openSettings: () => ipcRenderer.invoke('open-settings'),
 });

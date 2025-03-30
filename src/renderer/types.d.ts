@@ -7,7 +7,6 @@ interface Window {
     sendMessage: (message: string) => Promise<any>;
     saveSettings: (settings: any) => Promise<any>;
     getSettings: () => Promise<any>;
-    saveMascotPosition: (x: number, y: number) => Promise<any>;
     openSettings: () => Promise<any>;
   };
 }
