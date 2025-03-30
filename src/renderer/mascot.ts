@@ -20,18 +20,6 @@ let dragStartY = 0;
 let initialWindowX = 0;
 let initialWindowY = 0;
 
-/**
- * デバッグ用のステータス表示
- * @param message 表示するメッセージ
- */
-function updateDebugStatus(message: string): void {
-  const debugStatus = document.getElementById('debug-status');
-  if (debugStatus) {
-    const timestamp = new Date().toISOString().substr(11, 8);
-    debugStatus.textContent = `[${timestamp}] ${message}`;
-  }
-}
-
 // DOMが読み込まれたら初期化
 document.addEventListener('DOMContentLoaded', () => {
   // DOM要素の取得
@@ -88,9 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Error getting window position:', error);
     }
-    
-    // デバッグ情報を表示
-    updateDebugStatus(`Drag started at ${dragStartX},${dragStartY}, window at ${initialWindowX},${initialWindowY}`);
   });
 
   // ドラッグ中イベント
@@ -103,16 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // IPCを使用してウィンドウを指定位置に移動
     window.electronAPI.setWindowPosition(newX, newY);
-    
-    // デバッグ情報を表示
-    updateDebugStatus(`Window moved to: ${newX},${newY}`);
   });
 
   // ドラッグ終了イベント
   document.addEventListener('mouseup', () => {
     if (isDragging) {
       isDragging = false;
-      updateDebugStatus('Drag ended');
     }
   });
 
