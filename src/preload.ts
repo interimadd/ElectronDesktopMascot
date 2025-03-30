@@ -20,5 +20,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // ウィンドウの位置を保存
   saveMascotPosition: (x: number, y: number) => 
-    ipcRenderer.invoke('save-mascot-position', x, y)
+    ipcRenderer.invoke('save-mascot-position', x, y),
+
+  // 設定画面を開く
+  openSettings: () => ipcRenderer.invoke('open-settings'),
 });

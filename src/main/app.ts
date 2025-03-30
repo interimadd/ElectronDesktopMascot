@@ -43,7 +43,7 @@ export class App {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        preload: path.join(__dirname, '../../src/preload.js')
+        preload: path.join(__dirname, '../preload.js')
       }
     });
 
@@ -73,7 +73,7 @@ export class App {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        preload: path.join(__dirname, '../../src/preload.js')
+        preload: path.join(__dirname, '../preload.js')
       }
     });
 
