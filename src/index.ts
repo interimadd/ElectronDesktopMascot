@@ -7,6 +7,9 @@ import { App } from './main/app';
 // アプリケーションのシングルインスタンスロックを確保
 const gotTheLock = app.requestSingleInstanceLock();
 
+// GPUアクセラレーションを無効化
+app.disableHardwareAcceleration();
+
 if (!gotTheLock) {
   // 他のインスタンスが既に実行中の場合は終了
   app.quit();

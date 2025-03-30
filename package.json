@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "electron .",
-    "dev": "tsc && electron .",
+    "dev": "tsc && electron . --disable-gpu --disable-software-rasterizer",
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint src --ext .ts",
