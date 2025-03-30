@@ -1,7 +1,7 @@
 /* チャット吹き出しのスタイル */
 .chat-bubble {
   position: absolute;
-  bottom: 180px;
+  bottom: 350px;
   background-color: white;
   border-radius: 12px;
   padding: 10px;

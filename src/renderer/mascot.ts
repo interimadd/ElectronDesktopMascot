@@ -272,13 +272,6 @@ class MascotController {
       if (settings.mascotSize) {
         this.mascotElement.style.transform = `scale(${settings.mascotSize})`;
       }
-      
-      // マスコットの位置を設定
-      if (settings.mascotPosition) {
-        this.mascotElement.style.position = 'absolute';
-        this.mascotElement.style.left = `${settings.mascotPosition.x}px`;
-        this.mascotElement.style.top = `${settings.mascotPosition.y}px`;
-      }
     } catch (error) {
       console.error('Error initializing mascot:', error);
     }

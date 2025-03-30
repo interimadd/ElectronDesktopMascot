@@ -4,7 +4,6 @@ body {
   padding: 0;
   overflow: hidden;
   background-color: transparent;
-  /* -webkit-app-region: drag; */ /* ドラッグ可能にする - 削除 */
 }
 
 .container {
@@ -15,14 +14,12 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  /* -webkit-app-region: no-drag; */ /* ドラッグ不可にする - 追加 */
 }
 
 .mascot {
-  /* -webkit-app-region: drag; */ /* 削除 */
-  cursor: pointer; /* move から pointer に変更 */
-  position: relative;
-  bottom: 20px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 100px;
   z-index: 1000; /* 追加: 他の要素より前面に表示 */
   user-select: none; /* 追加: テキスト選択を無効化 */
   -webkit-user-select: none; /* 追加: テキスト選択を無効化 (Webkit) */

@@ -33,8 +33,8 @@ export class App {
    */
   private createMascotWindow(): void {
     this.mascotWindow = new BrowserWindow({
-      width: 300,
-      height: 400,
+      width: 600,
+      height: 1400,
       transparent: true,
       frame: false,
       resizable: false,
