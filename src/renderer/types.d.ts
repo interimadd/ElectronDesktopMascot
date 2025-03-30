@@ -8,7 +8,6 @@ interface Window {
     saveSettings: (settings: any) => Promise<any>;
     getSettings: () => Promise<any>;
     openSettings: () => Promise<any>;
-    moveWindow: (moveX: number, moveY: number) => Promise<any>;
     getWindowPosition: () => Promise<{ x: number; y: number; success: boolean; error?: string }>;
     setWindowPosition: (x: number, y: number) => Promise<{ success: boolean; error?: string }>;
   };

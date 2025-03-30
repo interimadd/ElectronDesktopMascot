@@ -18,9 +18,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 設定画面を開く
   openSettings: () => ipcRenderer.invoke('open-settings'),
   
-  // ウィンドウを移動
-  moveWindow: (moveX: number, moveY: number) => ipcRenderer.invoke('move-window', moveX, moveY),
-  
   // ウィンドウの現在位置を取得
   getWindowPosition: () => ipcRenderer.invoke('get-window-position'),
   
