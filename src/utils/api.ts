@@ -3,6 +3,7 @@
  */
 import axios from 'axios';
 import OpenAI from 'openai';
+import { logger } from './logger';
 
 /**
  * ChatGPT APIとの通信を行うクラス
@@ -48,7 +49,7 @@ export class ChatGptApi {
       const reply = response.choices[0]?.message?.content || 'すみません、応答できませんでした。';
       return reply;
     } catch (error) {
-      console.error('Error calling ChatGPT API:', error);
+      logger.error('Error calling ChatGPT API:', error);
       
       if (axios.isAxiosError(error) && error.response) {
         throw new Error(`API error: ${error.response.status} - ${error.response.data.error?.message || 'Unknown error'}`);

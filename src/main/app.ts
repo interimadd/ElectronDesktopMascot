@@ -131,7 +131,7 @@ export class App {
         this.configManager.saveSettings(settings);
         return { success: true };
       } catch (error) {
-        console.error('Error saving settings:', error);
+        logger.error('Error saving settings:', error);
         return { error: 'Failed to save settings' };
       }
     });

@@ -1,6 +1,7 @@
 /**
  * 設定画面のレンダラープロセス
  */
+import { logger } from '../utils/logger';
 
 // DOM要素
 const apiKeyInput = document.getElementById('api-key') as HTMLInputElement;
@@ -40,7 +41,7 @@ async function saveSettings(): Promise<void> {
       alert(`エラー: ${result.error}`);
     }
   } catch (error) {
-    console.error('Error saving settings:', error);
+    logger.error('Error saving settings:', error);
     alert('設定の保存中にエラーが発生しました');
   }
 }
@@ -66,7 +67,7 @@ async function loadSettings(): Promise<void> {
       alwaysOnTopCheckbox.checked = settings.alwaysOnTop;
     }
   } catch (error) {
-    console.error('Error loading settings:', error);
+    logger.error('Error loading settings:', error);
   }
 }
 
