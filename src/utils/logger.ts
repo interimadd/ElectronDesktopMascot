@@ -1,10 +1,6 @@
 /**
  * ロギングユーティリティ
  */
-import * as fs from 'fs';
-import * as path from 'path';
-import { app } from 'electron';
-
 /**
  * ログレベル
  */
@@ -19,28 +15,15 @@ export enum LogLevel {
  * ロガークラス
  */
 export class Logger {
-  private logFilePath: string;
   private logLevel: LogLevel;
 
   /**
    * コンストラクタ
-   * @param filename ログファイル名
    * @param level ログレベル
    */
-  constructor(filename: string = 'app.log', level: LogLevel = LogLevel.INFO) {
-    // ログファイルのパスを設定
-    const userDataPath = app.getPath('userData');
-    const logDir = path.join(userDataPath, 'logs');
-    
-    // ログディレクトリが存在しない場合は作成
-    if (!fs.existsSync(logDir)) {
-      fs.mkdirSync(logDir, { recursive: true });
-    }
-    
-    this.logFilePath = path.join(logDir, filename);
+  constructor(level: LogLevel = LogLevel.INFO) {
     this.logLevel = level;
-    
-    this.info(`Logger initialized. Log file: ${this.logFilePath}`);
+    this.info('Logger initialized.');
   }
 
   /**
@@ -70,13 +53,6 @@ export class Logger {
     
     // コンソールに出力
     console.log(logMessage);
-    
-    // ファイルに書き込み
-    try {
-      fs.appendFileSync(this.logFilePath, logMessage + '\n');
-    } catch (error) {
-      console.error('Failed to write to log file:', error);
-    }
   }
 
   /**
@@ -120,4 +96,4 @@ export class Logger {
 const logLevelFromEnv = process.env.LOG_LEVEL as LogLevel;
 const logLevel = Object.values(LogLevel).includes(logLevelFromEnv) ? logLevelFromEnv : LogLevel.INFO;
 
-export const logger = new Logger('app.log', logLevel);
+export const logger = new Logger(logLevel);
