@@ -66,10 +66,17 @@ export class App {
       return;
     }
 
+    // マスコットウィンドウが存在する場合、一時的にalwaysOnTopをfalseに設定
+    const restoreAlwaysOnTop = this.mascotWindow?.isAlwaysOnTop() || false;
+    if (this.mascotWindow) {
+      this.mascotWindow.setAlwaysOnTop(false);
+    }
+
     this.settingsWindow = new BrowserWindow({
       width: 500,
       height: 400,
       resizable: false,
+      alwaysOnTop: true, // 常に最前面に表示
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
@@ -80,6 +87,10 @@ export class App {
     this.settingsWindow.loadFile(path.join(__dirname, '../../src/renderer/settings.html'));
 
     this.settingsWindow.on('closed', () => {
+      // 設定ウィンドウが閉じられたら、マスコットウィンドウのalwaysOnTopを元に戻す
+      if (this.mascotWindow && restoreAlwaysOnTop) {
+        this.mascotWindow.setAlwaysOnTop(true);
+      }
       this.settingsWindow = null;
     });
   }
