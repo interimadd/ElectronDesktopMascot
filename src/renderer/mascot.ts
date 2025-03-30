@@ -2,40 +2,56 @@
  * マスコットのレンダラープロセス
  */
 
-// DOM要素
-const mascotElement = document.getElementById('mascot') as HTMLElement;
-const chatBubble = document.getElementById('chat-bubble') as HTMLElement;
-const chatContent = document.getElementById('chat-content') as HTMLElement;
-const chatInput = document.getElementById('chat-input') as HTMLInputElement;
-const sendButton = document.getElementById('send-button') as HTMLButtonElement;
+// DOM要素（DOMContentLoadedイベントで初期化）
+let mascotElement: HTMLElement;
+let chatBubble: HTMLElement;
+let chatContent: HTMLElement;
+let chatInput: HTMLInputElement;
+let sendButton: HTMLButtonElement;
 
 // 吹き出しの表示状態
 let isBubbleVisible = false;
 
-// マスコットのクリックイベント
-mascotElement.addEventListener('click', () => {
-  console.log('mascot clicked');
-  toggleChatBubble();
-});
+// DOMが読み込まれたら初期化
+document.addEventListener('DOMContentLoaded', () => {
+  // DOM要素の取得
+  mascotElement = document.getElementById('mascot') as HTMLElement;
+  chatBubble = document.getElementById('chat-bubble') as HTMLElement;
+  chatContent = document.getElementById('chat-content') as HTMLElement;
+  chatInput = document.getElementById('chat-input') as HTMLInputElement;
+  sendButton = document.getElementById('send-button') as HTMLButtonElement;
 
-// マスコットの右クリックイベント
-mascotElement.addEventListener('contextmenu', (event) => {
-  event.preventDefault();
+  // マスコットのクリックイベント
+  mascotElement.addEventListener('click', () => {
+    console.log('mascot clicked');
+    toggleChatBubble();
+  });
 
-  // 設定画面を開く
-  window.electronAPI.openSettings();
-});
+  // マスコットの右クリックイベント
+  mascotElement.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
 
-// チャット送信ボタンのクリックイベント
-sendButton.addEventListener('click', () => {
-  sendMessage();
-});
+    // 設定画面を開く
+    window.electronAPI.openSettings();
+  });
 
-// チャット入力のキーダウンイベント（Enterキーで送信）
-chatInput.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
+  // チャット送信ボタンのクリックイベント
+  sendButton.addEventListener('click', () => {
     sendMessage();
-  }
+  });
+
+  // チャット入力のキーダウンイベント（Enterキーで送信）
+  chatInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
+  });
+
+  // ドラッグ機能の実装
+  setupDragFunctionality();
+
+  // 初期化
+  init();
 });
 
 /**
@@ -100,41 +116,47 @@ function addMessage(text: string, sender: 'user' | 'mascot'): void {
   chatContent.scrollTop = chatContent.scrollHeight;
 }
 
-// ドラッグ機能の実装
-let isDragging = false;
-let offsetX = 0;
-let offsetY = 0;
+/**
+ * ドラッグ機能をセットアップする
+ */
+function setupDragFunctionality(): void {
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
 
-mascotElement.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  offsetX = e.clientX - mascotElement.getBoundingClientRect().left;
-  offsetY = e.clientY - mascotElement.getBoundingClientRect().top;
-});
+  mascotElement.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - mascotElement.getBoundingClientRect().left;
+    offsetY = e.clientY - mascotElement.getBoundingClientRect().top;
+  });
 
-document.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
-  
-  const x = e.clientX - offsetX;
-  const y = e.clientY - offsetY;
-  
-  mascotElement.style.position = 'absolute';
-  mascotElement.style.left = `${x}px`;
-  mascotElement.style.top = `${y}px`;
-});
-
-document.addEventListener('mouseup', () => {
-  if (isDragging) {
-    isDragging = false;
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
     
-    // 位置を保存
-    const x = parseInt(mascotElement.style.left || '0', 10);
-    const y = parseInt(mascotElement.style.top || '0', 10);
+    const x = e.clientX - offsetX;
+    const y = e.clientY - offsetY;
     
-    window.electronAPI.saveMascotPosition(x, y);
-  }
-});
+    mascotElement.style.position = 'absolute';
+    mascotElement.style.left = `${x}px`;
+    mascotElement.style.top = `${y}px`;
+  });
 
-// 初期化
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      
+      // 位置を保存
+      const x = parseInt(mascotElement.style.left || '0', 10);
+      const y = parseInt(mascotElement.style.top || '0', 10);
+      
+      window.electronAPI.saveMascotPosition(x, y);
+    }
+  });
+}
+
+/**
+ * 初期化
+ */
 async function init(): Promise<void> {
   try {
     // 設定を取得
@@ -155,6 +177,3 @@ async function init(): Promise<void> {
     console.error('Error initializing mascot:', error);
   }
 }
-
-// アプリケーションの初期化
-init();
