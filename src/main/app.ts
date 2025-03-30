@@ -157,6 +157,22 @@ export class App {
         return { error: 'Failed to open settings window' };
       }
     });
+
+    // ウィンドウを移動
+    ipcMain.handle('move-window', (_event, moveX: number, moveY: number) => {
+      try {
+        if (this.mascotWindow) {
+          const [x, y] = this.mascotWindow.getPosition();
+          this.mascotWindow.setPosition(x + moveX, y + moveY);
+          logger.debug(`Window moved by: ${moveX},${moveY} to position: ${x + moveX},${y + moveY}`);
+          return { success: true };
+        }
+        return { error: 'Mascot window not found' };
+      } catch (error) {
+        logger.error('Error moving window:', error);
+        return { error: 'Failed to move window' };
+      }
+    });
   }
 
   /**

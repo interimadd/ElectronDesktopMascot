@@ -8,9 +8,27 @@ let chatBubble: HTMLElement;
 let chatContent: HTMLElement;
 let chatInput: HTMLInputElement;
 let sendButton: HTMLButtonElement;
+let containerElement: HTMLElement;
 
 // 吹き出しの表示状態
 let isBubbleVisible = false;
+
+// ドラッグ関連の変数
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+
+/**
+ * デバッグ用のステータス表示
+ * @param message 表示するメッセージ
+ */
+function updateDebugStatus(message: string): void {
+  const debugStatus = document.getElementById('debug-status');
+  if (debugStatus) {
+    const timestamp = new Date().toISOString().substr(11, 8);
+    debugStatus.textContent = `[${timestamp}] ${message}`;
+  }
+}
 
 // DOMが読み込まれたら初期化
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   chatContent = document.getElementById('chat-content') as HTMLElement;
   chatInput = document.getElementById('chat-input') as HTMLInputElement;
   sendButton = document.getElementById('send-button') as HTMLButtonElement;
+  containerElement = document.querySelector('.container') as HTMLElement;
 
   // マスコットのクリックイベント
   mascotElement.addEventListener('click', () => {
@@ -44,6 +63,47 @@ document.addEventListener('DOMContentLoaded', () => {
   chatInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       sendMessage();
+    }
+  });
+
+  // ドラッグ開始イベント
+  containerElement.addEventListener('mousedown', (event) => {
+    // 左クリックのみ処理（右クリックは無視）
+    if (event.button !== 0) return;
+    
+    // ドラッグ開始位置を記録
+    isDragging = true;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    
+    // デバッグ情報を表示
+    updateDebugStatus('Drag started');
+  });
+
+  // ドラッグ中イベント
+  document.addEventListener('mousemove', (event) => {
+    if (!isDragging) return;
+    
+    // 移動量を計算
+    const moveX = event.clientX - dragStartX;
+    const moveY = event.clientY - dragStartY;
+    
+    // IPCを使用してウィンドウを移動
+    window.electronAPI.moveWindow(moveX, moveY);
+    
+    // ドラッグ開始位置を更新
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    
+    // デバッグ情報を表示
+    updateDebugStatus(`Window moved by: ${moveX},${moveY}`);
+  });
+
+  // ドラッグ終了イベント
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      updateDebugStatus('Drag ended');
     }
   });
 
