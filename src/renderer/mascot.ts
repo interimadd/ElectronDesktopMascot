@@ -16,8 +16,12 @@ class WindowDragController {
   /**
    * コンストラクタ
    * @param element ドラッグ可能な要素
+   * @param mascotElement マスコット要素（ドラッグ可能な領域）
    */
-  constructor(private element: HTMLElement) {
+  constructor(
+    private element: HTMLElement,
+    private mascotElement: HTMLElement
+  ) {
     this.setupEventListeners();
   }
 
@@ -42,6 +46,12 @@ class WindowDragController {
     // 左クリックのみ処理（右クリックは無視）
     if (event.button !== 0) return;
     
+    // クリックされた要素がマスコット要素またはその子要素かチェック
+    const target = event.target as HTMLElement;
+    if (!this.isMascotOrChild(target)) {
+      return; // マスコット以外の要素がクリックされた場合は処理を中止
+    }
+    
     // ドラッグ開始位置を記録
     this.isDragging = true;
     this.dragStartX = event.screenX;
@@ -57,6 +67,34 @@ class WindowDragController {
     } catch (error) {
       console.error('Error getting window position:', error);
     }
+  }
+
+  /**
+   * 要素がマスコット要素またはその子要素かどうかをチェック
+   * @param element チェックする要素
+   * @returns マスコット要素またはその子要素の場合はtrue
+   */
+  private isMascotOrChild(element: HTMLElement): boolean {
+    // 要素がnullになるまで親をたどる
+    let currentElement: HTMLElement | null = element;
+    
+    while (currentElement) {
+      // 現在の要素がマスコット要素と一致するかチェック
+      if (currentElement === this.mascotElement) {
+        return true;
+      }
+      
+      // チャットバブル要素かその子要素の場合は除外
+      if (currentElement.id === 'chat-bubble' ||
+          currentElement.closest('#chat-bubble')) {
+        return false;
+      }
+      
+      // 親要素に移動
+      currentElement = currentElement.parentElement;
+    }
+    
+    return false;
   }
 
   /**
@@ -233,7 +271,7 @@ class MascotController {
       sendButton
     });
     
-    this.windowDragController = new WindowDragController(this.containerElement);
+    this.windowDragController = new WindowDragController(this.containerElement, this.mascotElement);
 
     // イベントリスナーの設定
     this.setupEventListeners();
