@@ -2,18 +2,10 @@
  * マスコットのレンダラープロセス
  */
 
-class MascotController {
-  // DOM要素
-  private mascotElement: HTMLElement;
-  private chatBubble: HTMLElement;
-  private chatContent: HTMLElement;
-  private chatInput: HTMLInputElement;
-  private sendButton: HTMLButtonElement;
-  private containerElement: HTMLElement;
-
-  // 吹き出しの表示状態
-  private isBubbleVisible = false;
-
+/**
+ * ウィンドウのドラッグ移動を管理するクラス
+ */
+class WindowDragController {
   // ドラッグ関連の変数
   private isDragging = false;
   private dragStartX = 0;
@@ -23,62 +15,18 @@ class MascotController {
 
   /**
    * コンストラクタ
+   * @param element ドラッグ可能な要素
    */
-  constructor() {
-    // DOMが読み込まれたら初期化
-    document.addEventListener('DOMContentLoaded', this.onDOMContentLoaded.bind(this));
-  }
-
-  /**
-   * DOM要素が読み込まれたときの処理
-   */
-  private onDOMContentLoaded(): void {
-    // DOM要素の取得
-    this.mascotElement = document.getElementById('mascot') as HTMLElement;
-    this.chatBubble = document.getElementById('chat-bubble') as HTMLElement;
-    this.chatContent = document.getElementById('chat-content') as HTMLElement;
-    this.chatInput = document.getElementById('chat-input') as HTMLInputElement;
-    this.sendButton = document.getElementById('send-button') as HTMLButtonElement;
-    this.containerElement = document.querySelector('.container') as HTMLElement;
-
-    // イベントリスナーの設定
+  constructor(private element: HTMLElement) {
     this.setupEventListeners();
-    
-    // 初期化
-    this.init();
   }
 
   /**
-   * イベントリスナーを設定する
+   * イベントリスナーの設定
    */
   private setupEventListeners(): void {
-    // マスコットのクリックイベント
-    this.mascotElement.addEventListener('click', () => {
-      console.log('mascot clicked');
-      this.toggleChatBubble();
-    });
-
-    // マスコットの右クリックイベント
-    this.mascotElement.addEventListener('contextmenu', (event) => {
-      event.preventDefault();
-      // 設定画面を開く
-      window.electronAPI.openSettings();
-    });
-
-    // チャット送信ボタンのクリックイベント
-    this.sendButton.addEventListener('click', () => {
-      this.sendMessage();
-    });
-
-    // チャット入力のキーダウンイベント（Enterキーで送信）
-    this.chatInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        this.sendMessage();
-      }
-    });
-
     // ドラッグ開始イベント
-    this.containerElement.addEventListener('mousedown', this.handleDragStart.bind(this));
+    this.element.addEventListener('mousedown', this.handleDragStart.bind(this));
     
     // ドラッグ中イベント
     document.addEventListener('mousemove', this.handleDragMove.bind(this));
@@ -132,6 +80,82 @@ class MascotController {
     if (this.isDragging) {
       this.isDragging = false;
     }
+  }
+}
+
+class MascotController {
+  // DOM要素
+  private mascotElement: HTMLElement;
+  private chatBubble: HTMLElement;
+  private chatContent: HTMLElement;
+  private chatInput: HTMLInputElement;
+  private sendButton: HTMLButtonElement;
+  private containerElement: HTMLElement;
+
+  // 吹き出しの表示状態
+  private isBubbleVisible = false;
+
+  // ウィンドウドラッグコントローラー
+  private windowDragController: WindowDragController;
+
+  /**
+   * コンストラクタ
+   */
+  constructor() {
+    // DOMが読み込まれたら初期化
+    document.addEventListener('DOMContentLoaded', this.onDOMContentLoaded.bind(this));
+  }
+
+  /**
+   * DOM要素が読み込まれたときの処理
+   */
+  private onDOMContentLoaded(): void {
+    // DOM要素の取得
+    this.mascotElement = document.getElementById('mascot') as HTMLElement;
+    this.chatBubble = document.getElementById('chat-bubble') as HTMLElement;
+    this.chatContent = document.getElementById('chat-content') as HTMLElement;
+    this.chatInput = document.getElementById('chat-input') as HTMLInputElement;
+    this.sendButton = document.getElementById('send-button') as HTMLButtonElement;
+    this.containerElement = document.querySelector('.container') as HTMLElement;
+
+    // ウィンドウドラッグコントローラーの初期化
+    this.windowDragController = new WindowDragController(this.containerElement);
+
+    // イベントリスナーの設定
+    this.setupEventListeners();
+    
+    // 初期化
+    this.init();
+  }
+
+  /**
+   * イベントリスナーを設定する
+   */
+  private setupEventListeners(): void {
+    // マスコットのクリックイベント
+    this.mascotElement.addEventListener('click', () => {
+      console.log('mascot clicked');
+      this.toggleChatBubble();
+    });
+
+    // マスコットの右クリックイベント
+    this.mascotElement.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
+      // 設定画面を開く
+      window.electronAPI.openSettings();
+    });
+
+    // チャット送信ボタンのクリックイベント
+    this.sendButton.addEventListener('click', () => {
+      this.sendMessage();
+    });
+
+    // チャット入力のキーダウンイベント（Enterキーで送信）
+    this.chatInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        this.sendMessage();
+      }
+    });
   }
 
   /**
