@@ -17,6 +17,8 @@ let isBubbleVisible = false;
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
+let initialWindowX = 0;
+let initialWindowY = 0;
 
 /**
  * デバッグ用のステータス表示
@@ -67,36 +69,43 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ドラッグ開始イベント
-  containerElement.addEventListener('mousedown', (event) => {
+  containerElement.addEventListener('mousedown', async (event) => {
     // 左クリックのみ処理（右クリックは無視）
     if (event.button !== 0) return;
     
     // ドラッグ開始位置を記録
     isDragging = true;
-    dragStartX = event.clientX;
-    dragStartY = event.clientY;
+    dragStartX = event.screenX;
+    dragStartY = event.screenY;
+    
+    // ウィンドウの初期位置を取得
+    try {
+      const position = await window.electronAPI.getWindowPosition();
+      if (position.success) {
+        initialWindowX = position.x;
+        initialWindowY = position.y;
+      }
+    } catch (error) {
+      console.error('Error getting window position:', error);
+    }
     
     // デバッグ情報を表示
-    updateDebugStatus('Drag started');
+    updateDebugStatus(`Drag started at ${dragStartX},${dragStartY}, window at ${initialWindowX},${initialWindowY}`);
   });
 
   // ドラッグ中イベント
   document.addEventListener('mousemove', (event) => {
     if (!isDragging) return;
     
-    // 移動量を計算
-    const moveX = event.clientX - dragStartX;
-    const moveY = event.clientY - dragStartY;
+    // 新しい位置を計算: ウィンドウの初期位置 + (現在のマウス位置 - ドラッグ開始時のマウス位置)
+    const newX = initialWindowX + (event.screenX - dragStartX);
+    const newY = initialWindowY + (event.screenY - dragStartY);
     
-    // IPCを使用してウィンドウを移動
-    window.electronAPI.moveWindow(moveX, moveY);
-    
-    // ドラッグ開始位置を更新
-    dragStartX = event.clientX;
-    dragStartY = event.clientY;
+    // IPCを使用してウィンドウを指定位置に移動
+    window.electronAPI.setWindowPosition(newX, newY);
     
     // デバッグ情報を表示
-    updateDebugStatus(`Window moved by: ${moveX},${moveY}`);
+    updateDebugStatus(`Window moved to: ${newX},${newY}`);
   });
 
   // ドラッグ終了イベント

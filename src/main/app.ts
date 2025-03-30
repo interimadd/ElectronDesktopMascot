@@ -173,6 +173,36 @@ export class App {
         return { error: 'Failed to move window' };
       }
     });
+
+    // ウィンドウの現在位置を取得
+    ipcMain.handle('get-window-position', () => {
+      try {
+        if (this.mascotWindow) {
+          const position = this.mascotWindow.getPosition();
+          logger.debug(`Window position: ${position[0]},${position[1]}`);
+          return { x: position[0], y: position[1], success: true };
+        }
+        return { error: 'Mascot window not found' };
+      } catch (error) {
+        logger.error('Error getting window position:', error);
+        return { error: 'Failed to get window position' };
+      }
+    });
+
+    // ウィンドウを指定位置に移動
+    ipcMain.handle('set-window-position', (_event, x: number, y: number) => {
+      try {
+        if (this.mascotWindow) {
+          this.mascotWindow.setPosition(x, y);
+          logger.debug(`Window set to position: ${x},${y}`);
+          return { success: true };
+        }
+        return { error: 'Mascot window not found' };
+      } catch (error) {
+        logger.error('Error setting window position:', error);
+        return { error: 'Failed to set window position' };
+      }
+    });
   }
 
   /**

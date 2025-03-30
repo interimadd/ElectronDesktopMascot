@@ -20,4 +20,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // ウィンドウを移動
   moveWindow: (moveX: number, moveY: number) => ipcRenderer.invoke('move-window', moveX, moveY),
+  
+  // ウィンドウの現在位置を取得
+  getWindowPosition: () => ipcRenderer.invoke('get-window-position'),
+  
+  // ウィンドウを指定位置に移動
+  setWindowPosition: (x: number, y: number) => ipcRenderer.invoke('set-window-position', x, y),
 });
