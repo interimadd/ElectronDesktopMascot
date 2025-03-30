@@ -116,5 +116,8 @@ export class Logger {
   }
 }
 
-// シングルトンインスタンスをエクスポート
-export const logger = new Logger();
+// 環境変数LOG_LEVELに基づいてログレベルを設定
+const logLevelFromEnv = process.env.LOG_LEVEL as LogLevel;
+const logLevel = Object.values(LogLevel).includes(logLevelFromEnv) ? logLevelFromEnv : LogLevel.INFO;
+
+export const logger = new Logger('app.log', logLevel);
