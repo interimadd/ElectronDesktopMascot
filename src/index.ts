@@ -3,6 +3,24 @@
  */
 import { app } from 'electron';
 import { App } from './main/app';
+import * as path from 'path';
+
+// 開発モードの場合、electron-reloadを有効にする
+if (process.env.NODE_ENV === 'development') {
+  try {
+    // srcディレクトリを監視対象とする
+    const srcPath = path.join(__dirname, '..');
+    require('electron-reload')(srcPath, {
+      electron: path.join(srcPath, 'node_modules', '.bin', 'electron'),
+      hardResetMethod: 'exit',
+      // 監視対象のファイル拡張子
+      ignored: /node_modules|[\/\\]\.|\.json$/
+    });
+    console.log('Hot reload enabled');
+  } catch (err) {
+    console.error('electron-reload failed to initialize:', err);
+  }
+}
 
 // アプリケーションのシングルインスタンスロックを確保
 const gotTheLock = app.requestSingleInstanceLock();
