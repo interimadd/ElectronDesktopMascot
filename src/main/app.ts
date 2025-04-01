@@ -33,8 +33,8 @@ export class App {
    */
   private createMascotWindow(): void {
     this.mascotWindow = new BrowserWindow({
-      width: 600,
-      height: 1400,
+      width: 200,
+      height: 150,
       transparent: true,
       frame: false,
       resizable: false,
@@ -50,7 +50,7 @@ export class App {
     this.mascotWindow.loadFile(path.join(__dirname, '../../src/renderer/mascot.html'));
 
     // デバッグ用：開発ツールを開く
-    // this.mascotWindow.webContents.openDevTools({ mode: 'detach' });
+    this.mascotWindow.webContents.openDevTools({ mode: 'detach' });
 
     this.mascotWindow.on('closed', () => {
       this.mascotWindow = null;

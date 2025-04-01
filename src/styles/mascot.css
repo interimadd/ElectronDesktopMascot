@@ -19,7 +19,6 @@ body {
 .mascot {
   cursor: pointer;
   position: absolute;
-  bottom: 100px;
   z-index: 1000; /* 他の要素より前面に表示 */
   user-select: none; /* テキスト選択を無効化 */
   -webkit-user-select: none; /* テキスト選択を無効化 (Webkit) */
