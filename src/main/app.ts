@@ -51,7 +51,7 @@ export class App {
     this.mascotWindow.loadFile(path.join(__dirname, '../../src/renderer/mascot.html'));
 
     // デバッグ用：開発ツールを開く
-    this.mascotWindow.webContents.openDevTools({ mode: 'detach' });
+    // this.mascotWindow.webContents.openDevTools({ mode: 'detach' });
 
     this.mascotWindow.on('closed', () => {
       this.mascotWindow = null;
@@ -117,8 +117,8 @@ export class App {
 
     // バブルウィンドウを作成
     this.bubbleWindow = new BrowserWindow({
-      width: 350,
-      height: 300,
+      width: 400,
+      height: 600,
       x: mascotX - 75, // マスコットの中央上に配置
       y: mascotY - 320, // マスコットの上に配置
       transparent: true,
