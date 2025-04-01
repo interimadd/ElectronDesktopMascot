@@ -163,7 +163,7 @@ export class App {
     // バブルウィンドウの位置を更新（マスコットの上に配置）
     this.bubbleWindow.setPosition(
       mascotX - 75, // マスコットの中央上に配置
-      mascotY - bubbleSize[1] - 20 // マスコットの上に配置（バブルの高さ + マージン）
+      mascotY - bubbleSize[1] + 10 // マスコットの上に配置（バブルの高さ + マージン）
     );
   }
 
