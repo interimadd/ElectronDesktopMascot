@@ -353,16 +353,6 @@ class MascotController {
     
     // 画像のパスを設定
     this.mascotImage.src = this.IMAGE_PATHS[this.currentImageIndex];
-    
-    // デバッグ用
-    console.log(`Image switched to: ${this.IMAGE_PATHS[this.currentImageIndex]}`);
-    
-    // デバッグステータス要素が存在する場合は更新
-    const debugStatus = document.getElementById('debug-status');
-    if (debugStatus) {
-      const timestamp = new Date().toISOString().substr(11, 8);
-      debugStatus.textContent = `[${timestamp}] Image switched to: ${this.IMAGE_PATHS[this.currentImageIndex]}`;
-    }
   }
 }
 

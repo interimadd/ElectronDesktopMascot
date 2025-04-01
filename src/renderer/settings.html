@@ -92,32 +92,6 @@
     <button id="save-button">保存</button>
   </div>
 
-  <!-- デバッグ用のステータス表示 -->
-  <div id="debug-status" style="position: fixed; bottom: 5px; left: 5px; font-size: 10px; color: #999;"></div>
-
-  <script>
-    // デバッグ用のステータス表示
-    function updateDebugStatus(message) {
-      const debugStatus = document.getElementById('debug-status');
-      if (debugStatus) {
-        const timestamp = new Date().toISOString().substr(11, 8);
-        debugStatus.textContent = `[${timestamp}] ${message}`;
-      }
-    }
-    
-    updateDebugStatus('Page loaded');
-    
-    // electronAPIが利用可能かチェック
-    window.addEventListener('DOMContentLoaded', () => {
-      updateDebugStatus('DOM loaded');
-      if (window.electronAPI) {
-        updateDebugStatus('electronAPI is available');
-      } else {
-        updateDebugStatus('electronAPI is NOT available');
-      }
-    });
-  </script>
-
   <script src="../../dist/renderer/settings.js"></script>
 </body>
 </html>
