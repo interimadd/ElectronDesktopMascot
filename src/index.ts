@@ -28,6 +28,9 @@ const gotTheLock = app.requestSingleInstanceLock();
 // GPUアクセラレーションを無効化
 app.disableHardwareAcceleration();
 
+// スクロールバーを非表示にする
+app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar');
+
 if (!gotTheLock) {
   // 他のインスタンスが既に実行中の場合は終了
   app.quit();

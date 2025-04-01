@@ -117,8 +117,8 @@ export class App {
 
     // バブルウィンドウを作成
     this.bubbleWindow = new BrowserWindow({
-      width: 500,
-      height: 500,
+      width: 350,
+      height: 300,
       x: mascotX - 75, // マスコットの中央上に配置
       y: mascotY - 320, // マスコットの上に配置
       transparent: true,
@@ -130,7 +130,8 @@ export class App {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        preload: path.join(__dirname, '../preload.js')
+        preload: path.join(__dirname, '../preload.js'),
+        additionalArguments: ['--hide-scrollbars']
       }
     });
 

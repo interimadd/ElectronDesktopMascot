@@ -41,6 +41,15 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
   line-height: 1.4;
+  
+  /* スクロールバーを非表示にする */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Webkit (Chrome, Safari, etc.) のスクロールバーを非表示 */
+.chat-content::-webkit-scrollbar {
+  display: none;
 }
 
 .chat-input-container {
