@@ -3,7 +3,6 @@
  */
 import { ipcMain } from 'electron';
 import { ConfigManager } from './config';
-import { TrayManager } from './tray';
 import { chatGptApi } from '../utils/api';
 import { logger } from '../utils/logger';
 import { MascotWindow } from './windows/mascot-window';
@@ -15,12 +14,10 @@ export class App {
   private settingsWindow: SettingsWindow;
   private bubbleWindow: BubbleWindow;
   private configManager: ConfigManager;
-  private trayManager: TrayManager;
 
   constructor() {
     this.mascotWindow = new MascotWindow();
     this.configManager = new ConfigManager();
-    this.trayManager = new TrayManager(this);
     
     // マスコットウィンドウのインスタンスを渡して初期化
     this.settingsWindow = new SettingsWindow(this.mascotWindow);
@@ -33,7 +30,6 @@ export class App {
   public init(): void {
     this.mascotWindow.createWindow();
     this.setupIpcHandlers();
-    this.trayManager.init();
   }
 
   /**
@@ -151,13 +147,6 @@ export class App {
    */
   public showMascot(): void {
     this.mascotWindow.show();
-  }
-
-  /**
-   * 設定ウィンドウの表示
-   */
-  public createSettingsWindow(): void {
-    this.settingsWindow.show();
   }
 
   /**
