@@ -1,11 +1,13 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import { logger } from '../../utils/logger';
 
 export class MascotWindow {
   private window: BrowserWindow | null = null;
 
-  constructor() {}
+  constructor() {
+    this.setupIpcHandlers();
+  }
 
   public getWindow(): BrowserWindow | null {
     return this.window;
@@ -97,5 +99,44 @@ export class MascotWindow {
     if (this.window) {
       this.window.on('move', callback);
     }
+  }
+
+  public setupIpcHandlers(): void {
+    // ウィンドウを移動
+    ipcMain.handle('move-window', (_event, moveX: number, moveY: number) => {
+      try {
+        this.movePosition(moveX, moveY);
+        return { success: true };
+      } catch (error) {
+        logger.error('Error moving window:', error);
+        return { error: 'Failed to move window' };
+      }
+    });
+
+    // ウィンドウの現在位置を取得
+    ipcMain.handle('get-window-position', () => {
+      try {
+        const position = this.getPosition();
+        if (position) {
+          logger.debug(`Window position: ${position.x},${position.y}`);
+          return { ...position, success: true };
+        }
+        return { error: 'Mascot window not found' };
+      } catch (error) {
+        logger.error('Error getting window position:', error);
+        return { error: 'Failed to get window position' };
+      }
+    });
+
+    // ウィンドウを指定位置に移動
+    ipcMain.handle('set-window-position', (_event, x: number, y: number) => {
+      try {
+        this.setPosition(x, y);
+        return { success: true };
+      } catch (error) {
+        logger.error('Error setting window position:', error);
+        return { error: 'Failed to set window position' };
+      }
+    });
   }
 }

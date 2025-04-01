@@ -144,43 +144,6 @@ export class App {
         return { error: 'Failed to open settings window' };
       }
     });
-
-    // ウィンドウを移動
-    ipcMain.handle('move-window', (_event, moveX: number, moveY: number) => {
-      try {
-        this.mascotWindow.movePosition(moveX, moveY);
-        return { success: true };
-      } catch (error) {
-        logger.error('Error moving window:', error);
-        return { error: 'Failed to move window' };
-      }
-    });
-
-    // ウィンドウの現在位置を取得
-    ipcMain.handle('get-window-position', () => {
-      try {
-        const position = this.mascotWindow.getPosition();
-        if (position) {
-          logger.debug(`Window position: ${position.x},${position.y}`);
-          return { ...position, success: true };
-        }
-        return { error: 'Mascot window not found' };
-      } catch (error) {
-        logger.error('Error getting window position:', error);
-        return { error: 'Failed to get window position' };
-      }
-    });
-
-    // ウィンドウを指定位置に移動
-    ipcMain.handle('set-window-position', (_event, x: number, y: number) => {
-      try {
-        this.mascotWindow.setPosition(x, y);
-        return { success: true };
-      } catch (error) {
-        logger.error('Error setting window position:', error);
-        return { error: 'Failed to set window position' };
-      }
-    });
   }
 
   /**
