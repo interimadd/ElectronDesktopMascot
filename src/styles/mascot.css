@@ -23,6 +23,7 @@ body {
   z-index: 1000; /* 他の要素より前面に表示 */
   user-select: none; /* テキスト選択を無効化 */
   -webkit-user-select: none; /* テキスト選択を無効化 (Webkit) */
+  pointer-events: none; /* ドラッグイベントを無効化 */
 }
 
 /* マスコット画像のスタイル */
@@ -32,4 +33,6 @@ body {
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
+  pointer-events: auto; /* 画像自体のイベントは有効化 */
+  -webkit-user-drag: none; /* 画像ドラッグを無効化 (Webkit) */
 }
