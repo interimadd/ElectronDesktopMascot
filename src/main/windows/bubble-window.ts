@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow } from 'electron';
 import * as path from 'path';
 import { MascotWindow } from './mascot-window';
 import { logger } from '../../utils/logger';
@@ -9,6 +9,7 @@ export class BubbleWindow {
 
   constructor(mascotWindow: MascotWindow) {
     this.mascotWindow = mascotWindow;
+    this.setupIpcHandlers();
   }
 
   public getWindow(): BrowserWindow | null {
@@ -150,5 +151,28 @@ export class BubbleWindow {
     this.executeJavaScript(
       `window.bubbleController.receiveMessage(${JSON.stringify(message)})`
     );
+  }
+
+  private setupIpcHandlers(): void {
+    ipcMain.handle('toggle-chat-bubble', () => {
+      try {
+        logger.info('Toggling chat bubble');
+        this.toggle();
+        return { success: true };
+      } catch (error) {
+        logger.error('Error toggling chat bubble:', error);
+        return { error: 'Failed to toggle chat bubble' };
+      }
+    });
+
+    ipcMain.handle('resize-bubble-window', (_event, width: number, height: number) => {
+      try {
+        this.resize(width, height);
+        return { success: true };
+      } catch (error) {
+        logger.error('Error resizing bubble window:', error);
+        return { error: 'Failed to resize bubble window' };
+      }
+    });
   }
 }

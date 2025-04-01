@@ -40,29 +40,6 @@ export class App {
    * IPC通信ハンドラーの設定
    */
   private setupIpcHandlers(): void {
-    // チャットバブルの表示/非表示を切り替え
-    ipcMain.handle('toggle-chat-bubble', () => {
-      try {
-        logger.info('Toggling chat bubble');
-        this.bubbleWindow.toggle();
-        return { success: true };
-      } catch (error) {
-        logger.error('Error toggling chat bubble:', error);
-        return { error: 'Failed to toggle chat bubble' };
-      }
-    });
-
-    // チャットバブルウィンドウのサイズを変更
-    ipcMain.handle('resize-bubble-window', (_event, width: number, height: number) => {
-      try {
-        this.bubbleWindow.resize(width, height);
-        return { success: true };
-      } catch (error) {
-        logger.error('Error resizing bubble window:', error);
-        return { error: 'Failed to resize bubble window' };
-      }
-    });
-
     // チャットバブルからメッセージを送信
     ipcMain.handle('send-message-from-bubble', async (_event, message: string) => {
       try {
