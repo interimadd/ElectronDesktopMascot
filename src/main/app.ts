@@ -130,8 +130,7 @@ export class App {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        preload: path.join(__dirname, '../preload.js'),
-        additionalArguments: ['--hide-scrollbars']
+        preload: path.join(__dirname, '../preload.js')
       }
     });
 
