@@ -5,63 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <title>Chat Bubble - Electron Mascot</title>
-  <style>
-    /* すべてのスクロールバーを非表示にする */
-    ::-webkit-scrollbar {
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
-    }
-    
-    * {
-      scrollbar-width: none !important;
-      -ms-overflow-style: none !important;
-    }
-    
-    html, body {
-      overflow: hidden;
-      margin: 0;
-      padding: 0;
-      background: transparent;
-    }
-    
-    .chat-content::-webkit-scrollbar {
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
-    }
-  </style>
   <link rel="stylesheet" href="../styles/bubble.css">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background-color: transparent;
-    }
-    .chat-bubble {
-      position: relative;
-      bottom: auto;
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-    }
-    .chat-bubble::after {
-      display: none;
-    }
-    /* スクロールバーを非表示にする */
-    ::-webkit-scrollbar {
-      display: none;
-    }
-    * {
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE and Edge */
-    }
-    .chat-bubble::after {
-      display: none;
-    }
-  </style>
 </head>
 <body>
   <!-- チャットの吹き出し -->
