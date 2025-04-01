@@ -10,5 +10,11 @@ interface Window {
     openSettings: () => Promise<any>;
     getWindowPosition: () => Promise<{ x: number; y: number; success: boolean; error?: string }>;
     setWindowPosition: (x: number, y: number) => Promise<{ success: boolean; error?: string }>;
+    // チャットバブル用の新しいメソッド
+    toggleChatBubble: () => Promise<{ success: boolean; error?: string }>;
+    sendMessageFromBubble: (message: string) => Promise<{ success: boolean; error?: string }>;
+    resizeBubbleWindow: (width: number, height: number) => Promise<{ success: boolean; error?: string }>;
+    onClearChat: (callback: () => void) => void;
+    receiveMascotMessage: (message: string) => Promise<{ success: boolean; error?: string }>;
   };
 }

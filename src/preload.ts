@@ -23,4 +23,20 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // ウィンドウを指定位置に移動
   setWindowPosition: (x: number, y: number) => ipcRenderer.invoke('set-window-position', x, y),
+  
+  // チャットバブルの表示/非表示を切り替え
+  toggleChatBubble: () => ipcRenderer.invoke('toggle-chat-bubble'),
+  
+  // チャットバブルからメッセージを送信
+  sendMessageFromBubble: (message: string) => ipcRenderer.invoke('send-message-from-bubble', message),
+  
+  // チャットバブルウィンドウのサイズを変更
+  resizeBubbleWindow: (width: number, height: number) =>
+    ipcRenderer.invoke('resize-bubble-window', width, height),
+  
+  // チャットをクリアするイベントを受信
+  onClearChat: (callback: () => void) => ipcRenderer.on('clear-chat', () => callback()),
+  
+  // マスコットからのメッセージを受信
+  receiveMascotMessage: (message: string) => ipcRenderer.invoke('receive-mascot-message', message),
 });

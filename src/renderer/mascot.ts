@@ -84,11 +84,7 @@ class WindowDragController {
         return true;
       }
       
-      // チャットバブル要素かその子要素の場合は除外
-      if (currentElement.id === 'chat-bubble' ||
-          currentElement.closest('#chat-bubble')) {
-        return false;
-      }
+      // 除外する要素がある場合はここに追加
       
       // 親要素に移動
       currentElement = currentElement.parentElement;
@@ -122,113 +118,29 @@ class WindowDragController {
 }
 
 /**
- * チャット機能を管理するクラス
+ * チャットバブルを管理するクラス
  */
 class ChatController {
-  // チャット関連のDOM要素
-  private chatBubble: HTMLElement;
-  private chatContent: HTMLElement;
-  private chatInput: HTMLInputElement;
-  private sendButton: HTMLButtonElement;
-
   // 吹き出しの表示状態
   private isBubbleVisible = false;
 
   /**
    * コンストラクタ
-   * @param elements チャット関連のDOM要素
    */
-  constructor(elements: {
-    chatBubble: HTMLElement;
-    chatContent: HTMLElement;
-    chatInput: HTMLInputElement;
-    sendButton: HTMLButtonElement;
-  }) {
-    this.chatBubble = elements.chatBubble;
-    this.chatContent = elements.chatContent;
-    this.chatInput = elements.chatInput;
-    this.sendButton = elements.sendButton;
-
-    this.setupEventListeners();
-  }
-
-  /**
-   * イベントリスナーの設定
-   */
-  private setupEventListeners(): void {
-    // チャット送信ボタンのクリックイベント
-    this.sendButton.addEventListener('click', () => {
-      this.sendMessage();
-    });
-
-    // チャット入力のキーダウンイベント（Enterキーで送信）
-    this.chatInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        this.sendMessage();
-      }
-    });
+  constructor() {
+    // 特に初期化は不要
   }
 
   /**
    * チャット吹き出しの表示/非表示を切り替える
    */
   public toggleChatBubble(): void {
-    this.isBubbleVisible = !this.isBubbleVisible;
-    
-    if (this.isBubbleVisible) {
-      this.chatBubble.classList.remove('hidden');
-      this.chatInput.focus();
-    } else {
-      this.chatBubble.classList.add('hidden');
-    }
-  }
-
-  /**
-   * メッセージを送信する
-   */
-  private async sendMessage(): Promise<void> {
-    const message = this.chatInput.value.trim();
-    
-    if (!message) {
-      return;
-    }
-    
-    // ユーザーのメッセージを表示
-    this.addMessage(message, 'user');
-    
-    // 入力欄をクリア
-    this.chatInput.value = '';
-    
     try {
-      // ChatGPT APIにメッセージを送信
-      const response = await window.electronAPI.sendMessage(message);
-      
-      if (response.error) {
-        this.addMessage(`エラー: ${response.error}`, 'mascot');
-      } else {
-        this.addMessage(response.response, 'mascot');
-      }
+      // IPCを使用してチャットバブルウィンドウの表示/非表示を切り替え
+      window.electronAPI.toggleChatBubble();
     } catch (error) {
-      console.error('Error sending message:', error);
-      this.addMessage('メッセージの送信中にエラーが発生しました。', 'mascot');
+      console.error('Error toggling chat bubble:', error);
     }
-  }
-
-  /**
-   * チャット内容にメッセージを追加する
-   * @param text メッセージテキスト
-   * @param sender 送信者（'user' または 'mascot'）
-   */
-  private addMessage(text: string, sender: 'user' | 'mascot'): void {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message');
-    messageElement.classList.add(`message-${sender}`);
-    messageElement.textContent = text;
-    
-    this.chatContent.appendChild(messageElement);
-    
-    // 自動スクロール
-    this.chatContent.scrollTop = this.chatContent.scrollHeight;
   }
 }
 
@@ -268,19 +180,8 @@ class MascotController {
     this.mascotImage = document.getElementById('mascot-image') as HTMLImageElement;
     this.containerElement = document.querySelector('.container') as HTMLElement;
 
-    // チャット関連の要素を取得
-    const chatBubble = document.getElementById('chat-bubble') as HTMLElement;
-    const chatContent = document.getElementById('chat-content') as HTMLElement;
-    const chatInput = document.getElementById('chat-input') as HTMLInputElement;
-    const sendButton = document.getElementById('send-button') as HTMLButtonElement;
-
     // コントローラーの初期化
-    this.chatController = new ChatController({
-      chatBubble,
-      chatContent,
-      chatInput,
-      sendButton
-    });
+    this.chatController = new ChatController();
     
     this.windowDragController = new WindowDragController(this.containerElement, this.mascotElement);
 
@@ -301,6 +202,7 @@ class MascotController {
     // マスコットのクリックイベント
     this.mascotElement.addEventListener('click', () => {
       console.log('mascot clicked');
+      // チャットバブルウィンドウの表示/非表示を切り替え
       this.chatController.toggleChatBubble();
     });
 
