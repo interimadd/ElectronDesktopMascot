@@ -117,8 +117,8 @@ export class App {
 
     // バブルウィンドウを作成
     this.bubbleWindow = new BrowserWindow({
-      width: 350,
-      height: 300,
+      width: 500,
+      height: 500,
       x: mascotX - 75, // マスコットの中央上に配置
       y: mascotY - 320, // マスコットの上に配置
       transparent: true,
