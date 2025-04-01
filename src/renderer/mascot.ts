@@ -235,11 +235,21 @@ class ChatController {
 class MascotController {
   // DOM要素
   private mascotElement: HTMLElement;
+  private mascotImage: HTMLImageElement;
   private containerElement: HTMLElement;
 
   // チャットとドラッグコントローラー
   private chatController: ChatController;
   private windowDragController: WindowDragController;
+
+  // 画像切り替え用の変数
+  private currentImageIndex: number = 1;
+  private imageInterval: number | null = null;
+  private readonly IMAGE_PATHS = [
+    '../styles/mascot/bongo1.png',
+    '../styles/mascot/bongo2.png'
+  ];
+  private readonly ANIMATION_INTERVAL = 200; // ミリ秒
 
   /**
    * コンストラクタ
@@ -255,6 +265,7 @@ class MascotController {
   private onDOMContentLoaded(): void {
     // DOM要素の取得
     this.mascotElement = document.getElementById('mascot') as HTMLElement;
+    this.mascotImage = document.getElementById('mascot-image') as HTMLImageElement;
     this.containerElement = document.querySelector('.container') as HTMLElement;
 
     // チャット関連の要素を取得
@@ -278,6 +289,9 @@ class MascotController {
     
     // 初期化
     this.init();
+    
+    // 画像アニメーションの開始
+    this.startImageAnimation();
   }
 
   /**
@@ -312,6 +326,42 @@ class MascotController {
       }
     } catch (error) {
       console.error('Error initializing mascot:', error);
+    }
+  }
+
+  /**
+   * 画像アニメーションを開始する
+   */
+  private startImageAnimation(): void {
+    // すでに実行中の場合は停止
+    if (this.imageInterval !== null) {
+      clearInterval(this.imageInterval);
+    }
+
+    // 定期的に画像を切り替える
+    this.imageInterval = window.setInterval(() => {
+      this.switchImage();
+    }, this.ANIMATION_INTERVAL);
+  }
+
+  /**
+   * 画像を切り替える
+   */
+  private switchImage(): void {
+    // 次の画像のインデックスを計算（0または1）
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.IMAGE_PATHS.length;
+    
+    // 画像のパスを設定
+    this.mascotImage.src = this.IMAGE_PATHS[this.currentImageIndex];
+    
+    // デバッグ用
+    console.log(`Image switched to: ${this.IMAGE_PATHS[this.currentImageIndex]}`);
+    
+    // デバッグステータス要素が存在する場合は更新
+    const debugStatus = document.getElementById('debug-status');
+    if (debugStatus) {
+      const timestamp = new Date().toISOString().substr(11, 8);
+      debugStatus.textContent = `[${timestamp}] Image switched to: ${this.IMAGE_PATHS[this.currentImageIndex]}`;
     }
   }
 }
