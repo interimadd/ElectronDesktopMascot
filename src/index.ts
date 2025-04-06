@@ -27,6 +27,11 @@ if (!gotTheLock) {
 
   // 全てのウィンドウが閉じられたときの処理
   app.on('window-all-closed', () => {
+    // アプリケーションの終了処理を実行
+    if (mascotApp) {
+      mascotApp.quit();
+    }
+    
     // macOSでは、ユーザーがCmd + Qで明示的に終了するまでアプリケーションを終了しない
     if (process.platform !== 'darwin') {
       app.quit();

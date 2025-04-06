@@ -106,9 +106,18 @@ class WindowDragController {
   /**
    * ドラッグ終了イベントの処理
    */
-  private handleDragEnd(): void {
+  private async handleDragEnd(): Promise<void> {
     if (this.isDragging) {
       this.isDragging = false;
+      
+      // ドラッグ終了時に現在の位置を取得して保存
+      const position = await window.electronAPI.getWindowPosition();
+      if (position.success) {
+        // 設定に位置を保存
+        await window.electronAPI.saveSettings({
+          mascotPosition: { x: position.x, y: position.y }
+        });
+      }
     }
   }
 }

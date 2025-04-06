@@ -29,6 +29,14 @@ export class App {
    */
   public init(): void {
     this.mascotWindow.createWindow();
+    
+    // 保存されたマスコットの位置を読み込んで設定
+    const savedPosition = this.configManager.getMascotPosition();
+    if (savedPosition) {
+      this.mascotWindow.setPosition(savedPosition.x, savedPosition.y);
+      logger.info(`Restored mascot position: ${savedPosition.x},${savedPosition.y}`);
+    }
+    
     this.setupIpcHandlers();
   }
 
@@ -153,6 +161,13 @@ export class App {
    * アプリケーションの終了
    */
   public quit(): void {
+    // マスコットの現在位置を保存
+    const position = this.mascotWindow.getPosition();
+    if (position) {
+      this.configManager.saveMascotPosition(position.x, position.y);
+      logger.info(`Saved mascot position: ${position.x},${position.y}`);
+    }
+    
     this.mascotWindow.close();
     this.settingsWindow.close();
     this.bubbleWindow.close();
