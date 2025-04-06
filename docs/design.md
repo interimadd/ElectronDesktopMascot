@@ -114,25 +114,97 @@ Electronを使用したデスクトップマスコットアプリケーション
 │   ├── main/              # メインプロセス
 │   │   ├── app.ts         # アプリケーションのエントリーポイント
 │   │   ├── config.ts      # 設定管理
-│   │   └── tray.ts        # システムトレイ管理
+│   │   └── windows/       # ウィンドウ管理
+│   │       ├── bubble-window.ts    # 吹き出しウィンドウ
+│   │       ├── mascot-window.ts    # マスコットウィンドウ
+│   │       └── settings-window.ts  # 設定ウィンドウ
 │   ├── renderer/          # レンダラープロセス
+│   │   ├── bubble.html    # 吹き出しのHTML
+│   │   ├── bubble.ts      # 吹き出し表示管理
+│   │   ├── mascot.html    # マスコットのHTML
 │   │   ├── mascot.ts      # マスコット表示管理
-│   │   ├── chat.ts        # チャット機能
-│   │   └── bubble.ts      # 吹き出し表示
+│   │   ├── settings.html  # 設定画面のHTML
+│   │   ├── settings.ts    # 設定画面管理
+│   │   └── types.d.ts     # 型定義
 │   ├── styles/            # スタイルシート
+│   │   ├── bubble.css     # 吹き出しのスタイル
 │   │   ├── mascot.css     # マスコットのスタイル
-│   │   └── bubble.css     # 吹き出しのスタイル
+│   │   └── mascot/        # マスコット画像
+│   │       ├── bongo1.png # マスコット画像1
+│   │       └── bongo2.png # マスコット画像2
 │   ├── utils/             # ユーティリティ
 │   │   ├── api.ts         # API通信
 │   │   └── logger.ts      # ロギング
-│   └── index.ts           # エントリーポイント
+│   ├── index.ts           # エントリーポイント
+│   └── preload.ts         # プリロードスクリプト
 ├── tests/                 # テストコード
 │   ├── main/              # メインプロセスのテスト
+│   │   └── config.test.ts # 設定管理のテスト
 │   ├── renderer/          # レンダラープロセスのテスト
 │   └── utils/             # ユーティリティのテスト
+│       ├── api.test.ts    # API通信のテスト
+│       └── logger.test.ts # ロギングのテスト
+├── .clinerules            # Clineルール設定
+├── .gitignore             # Git除外設定
+├── jest.config.js         # Jestテスト設定
+├── package-lock.json      # パッケージロック
 ├── package.json           # パッケージ設定
 └── tsconfig.json          # TypeScript設定
 ```
+
+### ディレクトリ構造の役割
+
+#### メインプロセス (`src/main`)
+
+メインプロセスはElectronアプリケーションの中核となるプロセスで、以下の役割を担っています：
+
+1. **アプリケーションのライフサイクル管理**
+   - アプリの起動、終了、バックグラウンド動作などを制御
+   - `src/main/app.ts`がこの役割を担当
+
+2. **ウィンドウ管理**
+   - 各種ウィンドウ（マスコット、吹き出し、設定画面）の作成、表示、非表示、位置制御
+   - `src/main/windows/`ディレクトリ内のファイルがこれらを管理
+
+3. **システムレベルの機能**
+   - 設定の保存・読み込み（`src/main/config.ts`）
+   - APIキーの管理
+   - 外部APIとの通信の仲介
+
+4. **IPC通信の管理**
+   - レンダラープロセスからのリクエストを受け付け、処理を実行
+   - `ipcMain`を使用して通信チャネルを設定
+
+#### レンダラープロセス (`src/renderer`)
+
+レンダラープロセスはユーザーインターフェースを担当するプロセスで、以下の役割を担っています：
+
+1. **UI表示と操作**
+   - HTML、CSS、JavaScriptを使用してユーザーインターフェースを構築
+   - マスコットの表示とアニメーション（`src/renderer/mascot.ts`）
+   - 吹き出しの表示とチャット機能（`src/renderer/bubble.ts`）
+   - 設定画面の表示と操作（`src/renderer/settings.ts`）
+
+2. **ユーザー操作の処理**
+   - クリック、ドラッグなどのユーザー操作を検知して処理
+   - 例：`WindowDragController`クラスによるマスコットのドラッグ移動
+
+3. **メインプロセスとの通信**
+   - `window.electronAPI`（`preload.ts`で定義）を通じてメインプロセスと通信
+   - ユーザー操作をメインプロセスに伝達
+   - メインプロセスからの情報を受け取ってUIに反映
+
+#### プロセス間通信 (`src/preload.ts`)
+
+`preload.ts`は両プロセスの橋渡し役として機能します：
+
+1. **安全なAPI公開**
+   - `contextBridge.exposeInMainWorld`を使用して、レンダラープロセスから安全にメインプロセスの機能にアクセスできるAPIを公開
+   - セキュリティを確保しながら必要な機能だけを公開
+
+2. **IPC通信の実装**
+   - `ipcRenderer.invoke`を使用してメインプロセスの関数を呼び出し
+   - 例：メッセージ送信、設定の保存・取得、ウィンドウ位置の制御など
 
 ### 技術的な検討事項
 1. **ウィンドウの透過処理**
