@@ -39,4 +39,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // マスコットからのメッセージを受信
   receiveMascotMessage: (message: string) => ipcRenderer.invoke('receive-mascot-message', message),
+  
+  // デバッグモードかどうかを確認
+  isDebugMode: () => ipcRenderer.invoke('is-debug-mode'),
 });

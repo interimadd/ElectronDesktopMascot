@@ -106,6 +106,12 @@ export class App {
         return { error: 'Failed to open settings window' };
       }
     });
+
+    // デバッグモード
+    ipcMain.handle('is-debug-mode', () => {
+      const isDebugMode = process.env.DEBUG_MODE !== undefined;
+      return { isDebugMode };
+    });
   }
 
   /**

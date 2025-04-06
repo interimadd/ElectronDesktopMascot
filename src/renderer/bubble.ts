@@ -72,9 +72,38 @@ class BubbleController {
       (window.electronAPI as any).onClearChat(() => {
         this.clearChat();
       });
+
+      // デバッグモードの場合、サンプルメッセージを表示
+      const isDebugMode = await (window.electronAPI as any).isDebugMode();
+      if (isDebugMode) {
+        this.addSampleMessages();
+      }
     } catch (error) {
       console.error('Error initializing bubble:', error);
     }
+  }
+
+  /**
+   * デバッグ用のサンプルメッセージを追加する
+   */
+  private addSampleMessages(): void {
+    // Sample message from the user
+    this.addMessage('Hello!', 'user');
+    
+    // Sample message from the mascot
+    this.addMessage('Hi there! How can I assist you today?', 'mascot');
+    
+    // Example of a longer message
+    this.addMessage('Can you tell me how to use this app?', 'user');
+    this.addMessage(
+      `This app allows you to chat with a desktop mascot.<br><br>
+      <strong>Features</strong>:<br>
+      1. Click on the mascot to display the chat bubble.<br>
+      2. Enter a message in the chat bubble, and the mascot will reply.<br>
+      3. The mascot can be freely moved around.<br><br>
+      <em>Enjoy!</em>`,
+      'mascot'
+    );
   }
 
   /**
@@ -100,7 +129,7 @@ class BubbleController {
     // 入力欄をクリア
     this.chatInput.value = '';
     
-    const response = await (window.electronAPI as any).sendMessageFromBubble(message);
+    const response = await (window.electronAPI as any).sendMessage(message);
   
     this.addMessage(response.response, 'mascot');
   }
