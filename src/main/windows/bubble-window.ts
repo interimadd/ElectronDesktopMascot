@@ -136,24 +136,6 @@ export class BubbleWindow {
     }
   }
 
-  public executeJavaScript(code: string): void {
-    if (this.window) {
-      this.window.webContents.executeJavaScript(code);
-    }
-  }
-
-  public addUserMessage(message: string): void {
-    this.executeJavaScript(
-      `window.bubbleController.addMessage(${JSON.stringify(message)}, "user")`
-    );
-  }
-
-  public receiveMessage(message: string): void {
-    this.executeJavaScript(
-      `window.bubbleController.receiveMessage(${JSON.stringify(message)})`
-    );
-  }
-
   private setupIpcHandlers(): void {
     ipcMain.handle('toggle-chat-bubble', () => {
       try {

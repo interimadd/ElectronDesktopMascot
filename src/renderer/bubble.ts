@@ -100,14 +100,9 @@ class BubbleController {
     // 入力欄をクリア
     this.chatInput.value = '';
     
-    try {
-      // メインプロセスにメッセージを送信
-      // TypeScriptエラーを回避するために型アサーションを使用
-      (window.electronAPI as any).sendMessageFromBubble(message);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      this.addMessage('メッセージの送信中にエラーが発生しました。', 'mascot');
-    }
+    const response = await (window.electronAPI as any).sendMessageFromBubble(message);
+  
+    this.addMessage(response.response, 'mascot');
   }
 
   /**
@@ -142,14 +137,6 @@ class BubbleController {
     
     // ウィンドウの高さを設定
     (window.electronAPI as any).resizeBubbleWindow(350, actualHeight);
-  }
-
-  /**
-   * マスコットからのメッセージを受信する
-   * @param message メッセージテキスト
-   */
-  public receiveMessage(message: string): void {
-    this.addMessage(message, 'mascot');
   }
 }
 

@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   toggleChatBubble: () => ipcRenderer.invoke('toggle-chat-bubble'),
   
   // チャットバブルからメッセージを送信
-  sendMessageFromBubble: (message: string) => ipcRenderer.invoke('send-message-from-bubble', message),
+  sendMessageFromBubble: (message: string) => ipcRenderer.invoke('send-message', message),
   
   // チャットバブルウィンドウのサイズを変更
   resizeBubbleWindow: (width: number, height: number) =>
