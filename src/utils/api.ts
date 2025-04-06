@@ -3,6 +3,7 @@
  */
 import axios from 'axios';
 import OpenAI from 'openai';
+import { marked } from 'marked';
 import { logger } from './logger';
 
 /**
@@ -54,7 +55,10 @@ If there are points that should be corrected, please provide both the "corrected
       });
 
       const reply = response.choices[0]?.message?.content || 'Sorry, somthing go wrong.';
-      return reply;
+      
+      // Markdownをパースしてhtml形式に変換
+      const htmlContent = await this.convertMarkdownToHtml(reply);
+      return htmlContent;
     } catch (error) {
       logger.error('Error calling ChatGPT API:', error);
       
@@ -63,6 +67,23 @@ If there are points that should be corrected, please provide both the "corrected
       }
       
       throw new Error('Failed to communicate with ChatGPT API');
+    }
+  }
+
+  /**
+   * Markdown形式のテキストをHTML形式に変換する
+   * @param markdownText Markdown形式のテキスト
+   * @returns HTML形式のテキスト
+   */
+  private async convertMarkdownToHtml(markdownText: string): Promise<string> {
+    try {
+      // Markdownをパースしてhtml形式に変換
+      const html = await marked(markdownText);
+      return html;
+    } catch (error) {
+      logger.error('Error converting markdown to HTML:', error);
+      // エラーが発生した場合は元のテキストをそのまま返す
+      return markdownText;
     }
   }
 }

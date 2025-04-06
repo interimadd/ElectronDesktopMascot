@@ -114,7 +114,14 @@ class BubbleController {
     const messageElement = document.createElement('div');
     messageElement.classList.add('message');
     messageElement.classList.add(`message-${sender}`);
-    messageElement.textContent = text;
+    
+    // マスコットからのメッセージはHTML形式で表示し、ユーザーのメッセージはテキストとして表示
+    if (sender === 'mascot') {
+      // HTML形式で表示
+      messageElement.innerHTML = text;
+    } else {
+      messageElement.textContent = text;
+    }
     
     this.chatContent.appendChild(messageElement);
     
