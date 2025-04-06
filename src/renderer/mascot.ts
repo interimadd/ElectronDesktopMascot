@@ -58,14 +58,10 @@ class WindowDragController {
     this.dragStartY = event.screenY;
     
     // ウィンドウの初期位置を取得
-    try {
-      const position = await window.electronAPI.getWindowPosition();
-      if (position.success) {
-        this.initialWindowX = position.x;
-        this.initialWindowY = position.y;
-      }
-    } catch (error) {
-      console.error('Error getting window position:', error);
+    const position = await window.electronAPI.getWindowPosition();
+    if (position.success) {
+      this.initialWindowX = position.x;
+      this.initialWindowY = position.y;
     }
   }
 
@@ -117,41 +113,12 @@ class WindowDragController {
   }
 }
 
-/**
- * チャットバブルを管理するクラス
- */
-class ChatController {
-  // 吹き出しの表示状態
-  private isBubbleVisible = false;
-
-  /**
-   * コンストラクタ
-   */
-  constructor() {
-    // 特に初期化は不要
-  }
-
-  /**
-   * チャット吹き出しの表示/非表示を切り替える
-   */
-  public toggleChatBubble(): void {
-    try {
-      // IPCを使用してチャットバブルウィンドウの表示/非表示を切り替え
-      window.electronAPI.toggleChatBubble();
-    } catch (error) {
-      console.error('Error toggling chat bubble:', error);
-    }
-  }
-}
-
 class MascotController {
   // DOM要素
   private mascotElement: HTMLElement;
   private mascotImage: HTMLImageElement;
   private containerElement: HTMLElement;
 
-  // チャットとドラッグコントローラー
-  private chatController: ChatController;
   private windowDragController: WindowDragController;
 
   // 画像切り替え用の変数
@@ -179,9 +146,6 @@ class MascotController {
     this.mascotElement = document.getElementById('mascot') as HTMLElement;
     this.mascotImage = document.getElementById('mascot-image') as HTMLImageElement;
     this.containerElement = document.querySelector('.container') as HTMLElement;
-
-    // コントローラーの初期化
-    this.chatController = new ChatController();
     
     this.windowDragController = new WindowDragController(this.containerElement, this.mascotElement);
 
@@ -201,9 +165,8 @@ class MascotController {
   private setupEventListeners(): void {
     // マスコットのクリックイベント
     this.mascotElement.addEventListener('click', () => {
-      console.log('mascot clicked');
       // チャットバブルウィンドウの表示/非表示を切り替え
-      this.chatController.toggleChatBubble();
+      window.electronAPI.toggleChatBubble();
     });
 
     // マスコットの右クリックイベント

@@ -156,7 +156,6 @@ export class BubbleWindow {
   private setupIpcHandlers(): void {
     ipcMain.handle('toggle-chat-bubble', () => {
       try {
-        logger.info('Toggling chat bubble');
         this.toggle();
         return { success: true };
       } catch (error) {

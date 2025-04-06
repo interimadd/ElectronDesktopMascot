@@ -7,7 +7,6 @@
  */
 class BubbleController {
   // チャット関連のDOM要素
-  private chatBubble: HTMLElement;
   private chatContent: HTMLElement;
   private chatInput: HTMLInputElement;
   private sendButton: HTMLButtonElement;
@@ -25,7 +24,6 @@ class BubbleController {
    */
   private onDOMContentLoaded(): void {
     // DOM要素の取得
-    this.chatBubble = document.getElementById('chat-bubble') as HTMLElement;
     this.chatContent = document.getElementById('chat-content') as HTMLElement;
     this.chatInput = document.getElementById('chat-input') as HTMLInputElement;
     this.sendButton = document.getElementById('send-button') as HTMLButtonElement;
@@ -71,7 +69,6 @@ class BubbleController {
       this.adjustHeight();
       
       // IPCイベントリスナーを設定
-      // TypeScriptエラーを回避するために型アサーションを使用
       (window.electronAPI as any).onClearChat(() => {
         this.clearChat();
       });
@@ -144,7 +141,6 @@ class BubbleController {
     const actualHeight = Math.min(contentHeight + inputHeight + 40, maxHeight);
     
     // ウィンドウの高さを設定
-    // TypeScriptエラーを回避するために型アサーションを使用
     (window.electronAPI as any).resizeBubbleWindow(350, actualHeight);
   }
 
