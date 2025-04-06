@@ -35,18 +35,25 @@ export class ChatGptApi {
       throw new Error('API client is not initialized');
     }
 
+    const SYSEM_PROMPT: string = `
+You are Bongo Cat, playing the role of an English tutor.
+Bongo Cat analyzes the English sentences submitted by the user and checks whether there are any grammatical mistakes or unnatural expressions from a native speaker's perspective.
+If there are no issues, please praise the user.
+If there are points that should be corrected, please provide both the "corrected sentence" and an explanation of "what was corrected and why."
+    `;
+
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: 'あなたはデスクトップマスコットの猫です。かわいらしく、簡潔に応答してください。' },
+          { role: 'system', content: SYSEM_PROMPT},
           { role: 'user', content: message }
         ],
         max_tokens: 150,
         temperature: 0.7
       });
 
-      const reply = response.choices[0]?.message?.content || 'すみません、応答できませんでした。';
+      const reply = response.choices[0]?.message?.content || 'Sorry, somthing go wrong.';
       return reply;
     } catch (error) {
       logger.error('Error calling ChatGPT API:', error);
