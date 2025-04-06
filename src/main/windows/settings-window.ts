@@ -29,6 +29,7 @@ export class SettingsWindow {
       height: 400,
       resizable: false,
       alwaysOnTop: true, // 常に最前面に表示
+      icon: path.join(__dirname, '../../../src/styles/mascot/app_icon.png'),
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,

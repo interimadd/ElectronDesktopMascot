@@ -2,6 +2,7 @@
  * Electronデスクトップマスコットアプリケーションのエントリーポイント
  */
 import { app } from 'electron';
+import * as path from 'path';
 import { App } from './main/app';
 
 // アプリケーションのシングルインスタンスロックを確保
@@ -21,6 +22,11 @@ if (!gotTheLock) {
 
   // アプリケーションの準備完了時の処理
   app.on('ready', () => {
+    // macOSの場合はDockアイコンを設定
+    if (process.platform === 'darwin') {
+      app.dock.setIcon(path.join(__dirname, './styles/mascot/app_icon.png'));
+    }
+    
     mascotApp = new App();
     mascotApp.init();
   });

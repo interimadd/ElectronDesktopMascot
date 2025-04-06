@@ -22,6 +22,7 @@ export class MascotWindow {
       resizable: false,
       alwaysOnTop: true,
       skipTaskbar: true,
+      icon: path.join(__dirname, '../../../src/styles/mascot/app_icon.png'),
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,

@@ -45,6 +45,7 @@ export class BubbleWindow {
       alwaysOnTop: true,
       skipTaskbar: true,
       show: false, // 初期状態では非表示
+      icon: path.join(__dirname, '../../../src/styles/mascot/app_icon.png'),
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
