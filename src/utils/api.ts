@@ -6,6 +6,12 @@ import OpenAI from 'openai';
 import { marked } from 'marked';
 import { logger } from './logger';
 
+type GrammerCheckResponse = {
+  is_correct: boolean;
+  corrected_sentence: string;
+  comment: string;
+};
+
 /**
  * ChatGPT APIとの通信を行うクラス
  */
@@ -71,6 +77,47 @@ export class ChatGptApi {
     }
   }
 
+  public async sendGrammarCheckMessage(message: string): Promise<GrammerCheckResponse> {
+    if (!this.openai) {
+      throw new Error('API client is not initialized');
+    }
+
+    const SYSEM_PROMPT: string = `
+  You are Bongo Cat, playing the role of an English tutor.
+  Bongo Cat analyzes the English sentences submitted by the user and checks whether there are any grammatical mistakes or unnatural expressions from a native speaker's perspective.
+  If there are no issues, please praise the user.
+  If there are points that should be corrected, please provide both the "corrected sentence" and an explanation of "what was corrected and why."
+  Do not point out differences in capitalization unless they change the meaning of the sentence.
+  You must respond only in the following JSON format: {\"is_correct\": boolean, \"corrected_sentence\": \"...\", \"comment\": \"...\"}. Do not add any explanations outside the JSON.
+    `;
+  
+    try {
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        response_format: {"type": "json_object"},
+        messages: [
+          { role: 'system', content: SYSEM_PROMPT},
+          { role: 'user', content: message }
+        ],
+        max_tokens: 500,
+        temperature: 0.7
+      });
+
+      const reply = response.choices[0]?.message?.content || `{\"corrected_sentence": "Sorry, something went wrong.", "corrected_reason": ""}`;
+      
+      // json形式のレスポンスをパース
+      const jsonResponse = JSON.parse(reply);
+      return jsonResponse as GrammerCheckResponse;
+    } catch (error) {
+      logger.error('Error calling ChatGPT API:', error);
+      
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(`API error: ${error.response.status} - ${error.response.data.error?.message || 'Unknown error'}`);
+      }
+      
+      throw new Error('Failed to communicate with ChatGPT API');
+    }
+  }
   /**
    * Markdown形式のテキストをHTML形式に変換する
    * @param markdownText Markdown形式のテキスト
@@ -91,3 +138,4 @@ export class ChatGptApi {
 
 // シングルトンインスタンスをエクスポート
 export const chatGptApi = new ChatGptApi();
+export type { GrammerCheckResponse };
