@@ -8,7 +8,7 @@
 class BubbleController {
   // チャット関連のDOM要素
   private chatContent: HTMLElement;
-  private chatInput: HTMLInputElement;
+  private chatInput: HTMLTextAreaElement;
   private sendButton: HTMLButtonElement;
 
   /**
@@ -25,7 +25,7 @@ class BubbleController {
   private onDOMContentLoaded(): void {
     // DOM要素の取得
     this.chatContent = document.getElementById('chat-content') as HTMLElement;
-    this.chatInput = document.getElementById('chat-input') as HTMLInputElement;
+    this.chatInput = document.getElementById('chat-input') as HTMLTextAreaElement;
     this.sendButton = document.getElementById('send-button') as HTMLButtonElement;
 
     // イベントリスナーの設定
@@ -44,11 +44,17 @@ class BubbleController {
       this.sendMessage();
     });
 
-    // チャット入力のキーダウンイベント（Enterキーで送信）
+    // チャット入力のキーダウンイベント（Enterキーで送信、Shift+Enterで改行）
     this.chatInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault(); // デフォルトの改行を防止
         this.sendMessage();
       }
+    });
+
+    // 入力内容が変更されたときに高さを調整
+    this.chatInput.addEventListener('input', () => {
+      this.adjustTextareaHeight();
     });
 
     // ウィンドウのリサイズイベント
@@ -67,6 +73,7 @@ class BubbleController {
       
       // 高さを調整
       this.adjustHeight();
+      this.adjustTextareaHeight();
       
       // IPCイベントリスナーを設定
       (window.electronAPI as any).onClearChat(() => {
@@ -125,8 +132,9 @@ class BubbleController {
     
     // ユーザーのメッセージを表示
     this.addMessage(message, 'user');
-    
     // 入力欄をクリア
+    this.chatInput.value = '';
+    this.adjustTextareaHeight(); // 高さをリセット
     this.chatInput.value = '';
     
     const response = await (window.electronAPI as any).sendMessage(message);
@@ -173,6 +181,30 @@ class BubbleController {
     
     // ウィンドウの高さを設定
     (window.electronAPI as any).resizeBubbleWindow(350, actualHeight);
+  }
+
+  /**
+   * テキストエリアの高さを入力内容に応じて調整する
+   */
+  private adjustTextareaHeight(): void {
+    const textarea = this.chatInput;
+    
+    // 一度高さをリセット（スクロールの高さを正確に取得するため）
+    textarea.style.height = 'auto';
+    
+    // スクロールの高さに基づいて高さを設定（最小高さと最大高さの範囲内）
+    const newHeight = Math.max(
+      20, // 最小高さ（CSSの min-height と一致させる）
+      Math.min(
+        textarea.scrollHeight, // スクロールの高さ
+        150 // 最大高さ（CSSの max-height と一致させる）
+      )
+    );
+    
+    textarea.style.height = `${newHeight}px`;
+    
+    // チャットバブル全体の高さも調整
+    this.adjustHeight();
   }
 }
 
