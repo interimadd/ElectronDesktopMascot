@@ -59,7 +59,7 @@ export class App {
         
         // メッセージを送信
         logger.info(`Sending message to ChatGPT: ${message}`);
-        const response = await chatGptApi.sendMessage(message);
+        const response = await chatGptApi.sendNormalMessage(message);
         
         logger.info('Received response from ChatGPT');
         logger.info(`Response: ${response}`);
