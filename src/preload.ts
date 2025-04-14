@@ -8,6 +8,9 @@ import { contextBridge, ipcRenderer } from 'electron';
 contextBridge.exposeInMainWorld('electronAPI', {
   // ChatGPT APIにメッセージを送信
   sendMessage: (message: string) => ipcRenderer.invoke('send-message', message),
+
+  sendGrammarCheckMessage: (message: string) =>
+    ipcRenderer.invoke('send-grammar-check-message', message),
   
   // 設定を保存
   saveSettings: (settings: any) => ipcRenderer.invoke('save-settings', settings),

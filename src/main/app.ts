@@ -74,6 +74,30 @@ export class App {
       }
     });
 
+    // 文法チェックAPIにメッセージを送信（マスコットウィンドウから）
+    ipcMain.handle('send-grammar-check-message', async (_event, message: string) => {
+      try {
+        const apiKey = this.configManager.getApiKey();
+        if (!apiKey) {
+          logger.warn('API key is not set');
+          return { error: 'API key is not set. Please set it in the settings.' };
+        }
+        // ChatGPT APIの初期化
+        chatGptApi.init(apiKey);
+        // メッセージを送信
+        logger.info(`Sending message to grammar check API: ${message}`);
+        const response = await chatGptApi.sendGrammarCheckMessage(message);
+        logger.info('Received response from grammar check API');
+        logger.info(`Response: ${response}`);
+        return { response };
+      } catch (error) {
+        logger.error('Error sending message to grammar check API:', error);
+        return {
+          error: 'Failed to send message to grammar check API. Please check your API key and network connection.'
+        };
+      }
+    });
+
     // 設定の保存
     ipcMain.handle('save-settings', (_event, settings: any) => {
       try {

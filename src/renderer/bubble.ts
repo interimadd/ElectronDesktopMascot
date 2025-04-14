@@ -2,6 +2,12 @@
  * チャットバブルのレンダラープロセス
  */
 
+type GrammerCheckResponse = {
+  is_correct: boolean;
+  corrected_sentence: string;
+  comment: string;
+};
+
 /**
  * チャット機能を管理するクラス
  */
@@ -137,9 +143,23 @@ class BubbleController {
     this.adjustTextareaHeight(); // 高さをリセット
     this.chatInput.value = '';
     
-    const response = await (window.electronAPI as any).sendMessage(message);
-  
-    this.addMessage(response.response, 'mascot');
+    const response = await (window.electronAPI as any).sendGrammarCheckMessage(message);
+    if (response.error) {
+      this.addMessage(response.response, 'mascot');
+      return;
+    }
+
+    const grammarCheckResponse: GrammerCheckResponse = response.response;
+    if (grammarCheckResponse.is_correct) {
+      this.addMessage(grammarCheckResponse.comment, 'mascot');
+    } else {
+      this.addMessage("<strong>Corrected Sentence:</strong><br>" + grammarCheckResponse.corrected_sentence, 'mascot');
+      this.addMessage(grammarCheckResponse.comment, 'mascot');
+    }
+
+    const nextMessage = grammarCheckResponse.is_correct ? message : grammarCheckResponse.corrected_sentence;
+    const commandResponse = await (window.electronAPI as any).sendMessage(nextMessage);
+    this.addMessage(commandResponse.response, 'mascot');
   }
 
   /**
