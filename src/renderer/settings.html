@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <title>設定 - Electron Mascot</title>
+  <title>Settings - Electron Mascot</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -72,24 +72,24 @@
 </head>
 <body>
   <div class="container">
-    <h1>マスコット設定</h1>
+    <h1>Mascot Settings</h1>
     
     <div class="form-group">
-      <label for="api-key">ChatGPT API キー</label>
+      <label for="api-key">ChatGPT API Key</label>
       <input type="password" id="api-key" placeholder="sk-...">
     </div>
     
     <div class="form-group">
-      <label for="mascot-size">マスコットのサイズ <span id="size-value" class="size-value">100%</span></label>
+      <label for="mascot-size">Mascot Size <span id="size-value" class="size-value">100%</span></label>
       <input type="range" id="mascot-size" min="0.5" max="2" step="0.1" value="1">
     </div>
     
     <div class="form-group checkbox-group">
       <input type="checkbox" id="always-on-top">
-      <label for="always-on-top">常に最前面に表示</label>
+      <label for="always-on-top">Always on top</label>
     </div>
     
-    <button id="save-button">保存</button>
+    <button id="save-button">Save</button>
   </div>
 
   <script src="../../dist/renderer/settings.js"></script>

@@ -20,7 +20,7 @@ export class SettingsWindow {
       return;
     }
 
-    // マスコットウィンドウが存在する場合、一時的にalwaysOnTopをfalseに設定
+    // Temporarily disable alwaysOnTop for mascot window if exists
     const restoreAlwaysOnTop = this.mascotWindow.isAlwaysOnTop();
     this.mascotWindow.setAlwaysOnTop(false);
 
@@ -28,7 +28,7 @@ export class SettingsWindow {
       width: 500,
       height: 400,
       resizable: false,
-      alwaysOnTop: true, // 常に最前面に表示
+      alwaysOnTop: true, // Always on top
       icon: path.join(__dirname, '../../../src/styles/mascot/app_icon.png'),
       webPreferences: {
         nodeIntegration: false,
@@ -40,7 +40,7 @@ export class SettingsWindow {
     this.window.loadFile(path.join(__dirname, '../../../src/renderer/settings.html'));
 
     this.window.on('closed', () => {
-      // 設定ウィンドウが閉じられたら、マスコットウィンドウのalwaysOnTopを元に戻す
+      // Restore mascot window's alwaysOnTop when settings window closes
       if (restoreAlwaysOnTop) {
         this.mascotWindow.setAlwaysOnTop(true);
       }
