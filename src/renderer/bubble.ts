@@ -4,6 +4,7 @@
 
 type GrammerCheckResponse = {
   is_correct: boolean;
+  is_question: boolean;
   corrected_sentence: string;
   comment: string;
 };
@@ -182,6 +183,12 @@ class BubbleController {
     } else {
       this.addMessage("<strong>Corrected Sentence:</strong><br>" + grammarCheckResponse.corrected_sentence, 'mascot');
       this.addMessage(grammarCheckResponse.comment, 'mascot');
+    }
+
+    if (grammarCheckResponse.is_question) {
+      this.addMessage('That seems like a question! Let me check...', 'mascot');
+    } else {
+      return;
     }
 
     const nextMessage = grammarCheckResponse.is_correct ? message : grammarCheckResponse.corrected_sentence;

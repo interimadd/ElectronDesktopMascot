@@ -8,6 +8,7 @@ import { logger } from './logger';
 
 type GrammerCheckResponse = {
   is_correct: boolean;
+  is_question: boolean;
   corrected_sentence: string;
   comment: string;
 };
@@ -43,7 +44,8 @@ export class ChatGptApi {
   If there are no issues, please praise the user.
   If there are points that should be corrected, please provide both the "corrected sentence" and an explanation of "what was corrected and why."
   Do not point out differences in capitalization unless they change the meaning of the sentence.
-  You must respond only in the following JSON format: {\"is_correct\": boolean, \"corrected_sentence\": \"...\", \"comment\": \"...\"}. Do not add any explanations outside the JSON.
+  Check if the sentence is a question and return true or false.
+  You must respond only in the following JSON format: {\"is_correct\": boolean, \"is_question\": boolean, \"corrected_sentence\": \"...\", \"comment\": \"...\"}. Do not add any explanations outside the JSON.
     `;
   
     try {
