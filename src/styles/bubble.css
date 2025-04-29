@@ -36,7 +36,8 @@
   flex: 1;
   overflow-y: auto;
   margin-bottom: 10px;
-  max-height: 600px;
+  max-height: calc(100vh - 150px); /* 動的な高さ調整 */
+  min-height: 100px; /* 最小高さを設定 */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
   line-height: 1.4;

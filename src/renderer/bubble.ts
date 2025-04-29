@@ -12,6 +12,26 @@ type GrammerCheckResponse = {
  * チャット機能を管理するクラス
  */
 class BubbleController {
+  private handleScroll(event: WheelEvent): void {
+    // 現在のスクロール位置を更新
+    this.currentScrollPosition = this.chatContent.scrollTop;
+    
+    // 上方向へのスクロール制限（最上部）
+    if (event.deltaY < 0 && this.currentScrollPosition <= 0) {
+      event.preventDefault();
+      this.chatContent.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 下方向へのスクロール制限（最下部）
+    const maxScroll = this.chatContent.scrollHeight - this.chatContent.clientHeight;
+    if (event.deltaY > 0 && this.currentScrollPosition >= maxScroll) {
+      event.preventDefault();
+      this.chatContent.scrollTo({ top: maxScroll, behavior: 'smooth' });
+      return;
+    }
+  }
+
   // チャット関連のDOM要素
   private chatContent: HTMLElement;
   private chatInput: HTMLTextAreaElement;
@@ -44,7 +64,14 @@ class BubbleController {
   /**
    * イベントリスナーの設定
    */
+  private currentScrollPosition = 0;
+
   private setupEventListeners(): void {
+    // ホイールイベントリスナー
+    this.chatContent.addEventListener('wheel', (event) => {
+      this.handleScroll(event);
+    });
+
     // チャット送信ボタンのクリックイベント
     this.sendButton.addEventListener('click', () => {
       this.sendMessage();
@@ -182,8 +209,11 @@ class BubbleController {
     
     this.chatContent.appendChild(messageElement);
     
-    // 自動スクロール
-    this.chatContent.scrollTop = this.chatContent.scrollHeight;
+    // 自動スクロール（最下部にいる場合のみ）
+    if (this.currentScrollPosition >= this.chatContent.scrollHeight - this.chatContent.clientHeight - 10) {
+      this.chatContent.scrollTop = this.chatContent.scrollHeight;
+    }
+    this.currentScrollPosition = this.chatContent.scrollTop;
   }
 
   /**
