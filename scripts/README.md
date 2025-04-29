@@ -20,25 +20,12 @@ npm install
 npx tsc -p scripts/tsconfig.json
 ```
 
-このコマンドは、scripts ディレクトリ内のスクリプトと、それが依存する src ディレクトリ内のファイルを一緒にコンパイルします。
-
-```bash
-npx tsc -p scripts/tsconfig.json
-```
-
 ### 使用方法
 
 コンパイル後、以下のコマンドでスクリプトを実行できます：
 
 ```bash
-node dist/scripts/test-send-message.js <APIキー> <メッセージ>
-```
-
-#### 例：
-
-```bash
-node dist/scripts/test-send-message.js sk-xxxxxxxxxxxx "Is this sentence grammatically correct?"
-```
+node dist/scripts/test-send-message.js <APIキー>
 
 ### 出力例
 
